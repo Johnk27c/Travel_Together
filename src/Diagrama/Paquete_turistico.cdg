@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Paquete_turistico">
+  <ClassDiagramComponents>
+    <Class name="Paquete" package="" visibility="public" xPosition="576.0" yPosition="129.0">
+      <Fields>
+        <Field name="codPaquete" type="int" visibility="private"/>
+        <Field name="fechaIni" type="LocalDate" visibility="private"/>
+        <Field name="fechaFin" type="LocalDate" visibility="private"/>
+        <Field name="boleto" type="Pasaje" visibility="private"/>
+        <Field name="estadia" type="Estadia" visibility="private"/>
+        <Field name="regimen" type="Pension" visibility="private"/>
+        <Field name="turistas" type="ArrayList" visibility="private"/>
+        <Field name="montoFinal" type="double" visibility="private"/>
+        <Field name="precioTraslados" type="double" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Alojamiento" package="" visibility="public" xPosition="1123.0" yPosition="488.0">
+      <Fields>
+        <Field name="codAlojamiento" type="int" visibility="private"/>
+        <Field name="nombreAlojamiento" type="String" visibility="private"/>
+        <Field name="tipo" type="String" visibility="private"/>
+        <Field name="capacidad" type="int" visibility="private"/>
+        <Field name="habitaciones" type="int" visibility="private"/>
+        <Field name="banios" type="int" visibility="private"/>
+        <Field name="precioxNoche" type="double" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Pensión" package="" visibility="public" xPosition="299.0" yPosition="476.0">
+      <Fields>
+        <Field name="codPension" type="int" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="porcentaje" type="double" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Turista" package="" visibility="public" xPosition="299.0" yPosition="42.0">
+      <Fields>
+        <Field name="dni" type="int" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+        <Field name="apellido" type="String" visibility="private"/>
+        <Field name="edad" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Pasaje" package="" visibility="public" xPosition="875.0" yPosition="106.0">
+      <Fields>
+        <Field name="codPasaje" type="int" visibility="private"/>
+        <Field name="fechaHora" type="LocalDateTime" visibility="private"/>
+        <Field name="ciudadOrigen" type="Ciudad" visibility="private"/>
+        <Field name="ciudadDestino" type="Ciudad" visibility="private"/>
+        <Field name="asiento" type="int" visibility="private"/>
+        <Field name="transporte" type="String" visibility="private"/>
+        <Field name="precio" type="double" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Ciudad" package="" visibility="public" xPosition="1209.0" yPosition="154.0">
+      <Fields>
+        <Field name="codCiudad" type="int" visibility="private"/>
+        <Field name="nombre" type="String" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Estadia" package="" visibility="public" xPosition="741.0" yPosition="519.0">
+      <Fields>
+        <Field name="codEstadia" type="int" visibility="private"/>
+        <Field name="fechaHoraCkeckin" type="LocalDateTime" visibility="private"/>
+        <Field name="fechaHoraCkeckout" type="LocalDateTime" visibility="private"/>
+        <Field name="monto" type="double" visibility="private"/>
+        <Field name="alojamiento" type="Alojamiento" visibility="private"/>
+        <Field name="vigencia" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="tiene" source="Paquete" target="Pasaje" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="tiene" source="Paquete" target="Pensión" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="tiene" source="Paquete" target="Turista" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="tiene" source="Paquete" target="Estadia" type="Composition" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="tiene" source="Pasaje" target="Ciudad" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="tiene" source="Estadia" target="Alojamiento" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
