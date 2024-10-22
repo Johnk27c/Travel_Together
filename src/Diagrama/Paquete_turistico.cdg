@@ -2,7 +2,7 @@
 
 <ClassDiagram name="Paquete_turistico">
   <ClassDiagramComponents>
-    <Class name="Paquete" package="" visibility="public" xPosition="576.0" yPosition="129.0">
+    <Class name="Paquete" package="" visibility="public" xPosition="284.0" yPosition="234.0">
       <Fields>
         <Field name="codPaquete" type="int" visibility="private"/>
         <Field name="fechaIni" type="LocalDate" visibility="private"/>
@@ -17,7 +17,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Alojamiento" package="" visibility="public" xPosition="1123.0" yPosition="488.0">
+    <Class name="Alojamiento" package="" visibility="public" xPosition="192.0" yPosition="637.0">
       <Fields>
         <Field name="codAlojamiento" type="int" visibility="private"/>
         <Field name="nombreAlojamiento" type="String" visibility="private"/>
@@ -30,7 +30,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Pensión" package="" visibility="public" xPosition="299.0" yPosition="476.0">
+    <Class name="Pensión" package="" visibility="public" xPosition="34.0" yPosition="431.0">
       <Fields>
         <Field name="codPension" type="int" visibility="private"/>
         <Field name="nombre" type="String" visibility="private"/>
@@ -39,7 +39,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Turista" package="" visibility="public" xPosition="299.0" yPosition="42.0">
+    <Class name="Turista" package="" visibility="public" xPosition="34.0" yPosition="70.0">
       <Fields>
         <Field name="dni" type="int" visibility="private"/>
         <Field name="nombre" type="String" visibility="private"/>
@@ -49,7 +49,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Pasaje" package="" visibility="public" xPosition="875.0" yPosition="106.0">
+    <Class name="Pasaje" package="" visibility="public" xPosition="490.0" yPosition="41.0">
       <Fields>
         <Field name="codPasaje" type="int" visibility="private"/>
         <Field name="fechaHora" type="LocalDateTime" visibility="private"/>
@@ -62,7 +62,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Ciudad" package="" visibility="public" xPosition="1209.0" yPosition="154.0">
+    <Class name="Ciudad" package="" visibility="public" xPosition="704.0" yPosition="108.0">
       <Fields>
         <Field name="codCiudad" type="int" visibility="private"/>
         <Field name="nombre" type="String" visibility="private"/>
@@ -70,7 +70,7 @@
       <Constructors/>
       <Methods/>
     </Class>
-    <Class name="Estadia" package="" visibility="public" xPosition="741.0" yPosition="519.0">
+    <Class name="Estadia" package="" visibility="public" xPosition="490.0" yPosition="462.0">
       <Fields>
         <Field name="codEstadia" type="int" visibility="private"/>
         <Field name="fechaHoraCkeckin" type="LocalDateTime" visibility="private"/>
@@ -84,11 +84,11 @@
     </Class>
   </ClassDiagramComponents>
   <ClassDiagramRelations>
+    <HasRelation name="tiene" source="Estadia" target="Alojamiento" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
+    <HasRelation name="tiene" source="Pasaje" target="Ciudad" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
     <HasRelation name="tiene" source="Paquete" target="Pasaje" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
     <HasRelation name="tiene" source="Paquete" target="Pensión" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
     <HasRelation name="tiene" source="Paquete" target="Turista" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
     <HasRelation name="tiene" source="Paquete" target="Estadia" type="Composition" sourceCardinality="0..1" targetCardinality="1..1"/>
-    <HasRelation name="tiene" source="Pasaje" target="Ciudad" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
-    <HasRelation name="tiene" source="Estadia" target="Alojamiento" type="Aggregation" sourceCardinality="0..1" targetCardinality="1..1"/>
   </ClassDiagramRelations>
 </ClassDiagram>
