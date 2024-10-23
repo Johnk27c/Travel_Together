@@ -1,5 +1,8 @@
 package Vistas;
 
+import Entidades.Turista;
+import Persistencia.TuristaData;
+
 /**
  *
  * @author Gabriel Jara
@@ -71,6 +74,19 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 new VistaPrincipal().setVisible(true);
             }
         });
+
+        TuristaData turData = new TuristaData();
+        Turista turista1 = new Turista(37090900, "Jon", "Cuello", 31);
+        Turista turista2 = new Turista(43765347, "Rodrigo", "Guerrero", 23);
+        Turista turista3 = new Turista(46936302, "Herrera", "Franco", 18);
+        Turista turista4 = new Turista(42942099, "Lara", "Santiago", 22);
+        Turista turista5 = new Turista(340075560, "Jara", "Gabriel", 36);
+        
+        turData.guardarTurista(turista1);
+        turData.guardarTurista(turista2);
+        turData.guardarTurista(turista3);
+        turData.guardarTurista(turista4);
+        turData.guardarTurista(turista5);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
