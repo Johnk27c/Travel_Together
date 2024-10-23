@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Entidades;
-
 
 /**
  *
  * @author Santiago Lara
  */
 public class Alojamiento {
+
     private int codAlojam;
     private String nombreAlojamiento;
     private String tipo;
@@ -84,8 +80,4 @@ public class Alojamiento {
         this.precioNoche = precioNoche;
     }
 
-    
-    
-    
-    
 }
