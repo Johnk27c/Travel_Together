@@ -14,6 +14,10 @@ public class Pension {
         this.nombre = nombre;
         this.porcentaje = porcentaje;
     }
+    
+    public Pension(){
+        
+    }
 
     public int getCodAdicional() {
         return codAdicional;
