@@ -13,8 +13,10 @@ public class Alojamiento {
     private int habitaciones;
     private int banios;
     private double precioNoche;
+    private Ciudad ciudad;
+    private String direccion;
 
-    public Alojamiento(int codAlojam, String nombreAlojamiento, String tipo, int capacidad, int habitaciones, int banios, double precioNoche) {
+    public Alojamiento(int codAlojam, String nombreAlojamiento, String tipo, int capacidad, int habitaciones, int banios, double precioNoche, Ciudad ciudad, String direccion) {
         this.codAlojam = codAlojam;
         this.nombreAlojamiento = nombreAlojamiento;
         this.tipo = tipo;
@@ -22,6 +24,8 @@ public class Alojamiento {
         this.habitaciones = habitaciones;
         this.banios = banios;
         this.precioNoche = precioNoche;
+        this.ciudad = ciudad;
+        this.direccion = direccion;
     }
 
     public int getCodAlojam() {
@@ -78,6 +82,22 @@ public class Alojamiento {
 
     public void setPrecioNoche(double precioNoche) {
         this.precioNoche = precioNoche;
+    }
+
+    public Ciudad getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(Ciudad ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
 }

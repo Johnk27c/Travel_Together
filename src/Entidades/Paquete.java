@@ -1,7 +1,6 @@
 package Entidades;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  *
@@ -14,18 +13,20 @@ public class Paquete {
     private Pasaje boleto;
     private Estadia estadia;
     private Pension regimen;
-    private ArrayList<Turista> turistas;
+    private Turista turista;
+    private Turista comprador;
     double montoFinal;
     double precioTraslados;
 
-    public Paquete (int codPaquete, LocalDate fechaIni, LocalDate fechaFin, Pasaje boleto, Estadia estadia, Pension regimen, ArrayList<Turista> turistas, double montoFinal, double precioTraslados) {
+    public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, Pasaje boleto, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados) {
         this.codPaquete = codPaquete;
         this.fechaIni = fechaIni;
         this.fechaFin = fechaFin;
         this.boleto = boleto;
         this.estadia = estadia;
         this.regimen = regimen;
-        this.turistas = turistas;
+        this.turista = turista;
+        this.comprador = comprador;
         this.montoFinal = montoFinal;
         this.precioTraslados = precioTraslados;
     }
@@ -78,12 +79,20 @@ public class Paquete {
         this.regimen = regimen;
     }
 
-    public ArrayList<Turista> getTuristas() {
-        return turistas;
+    public Turista getTurista() {
+        return turista;
     }
 
-    public void setTuristas(ArrayList<Turista> turistas) {
-        this.turistas = turistas;
+    public void setTurista(Turista turista) {
+        this.turista = turista;
+    }
+
+    public Turista getComprador() {
+        return comprador;
+    }
+
+    public void setComprador(Turista comprador) {
+        this.comprador = comprador;
     }
 
     public double getMontoFinal() {
@@ -101,6 +110,5 @@ public class Paquete {
     public void setPrecioTraslados(double precioTraslados) {
         this.precioTraslados = precioTraslados;
     }
-    
     
 }
