@@ -16,6 +16,9 @@ public class Estadia {
     private double monto;
     private boolean vigencia;
 
+    public Estadia(){
+    }
+    
     public Estadia(int codEstadia, LocalDateTime fechaHoraCheckin, LocalDateTime fechaHoraCheckout, Alojamiento Alojamiento, double monto, boolean vigencia) {
         this.codEstadia = codEstadia;
         this.fechaHoraCheckin = fechaHoraCheckin;
