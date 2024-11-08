@@ -14,10 +14,13 @@ public class Ciudad {
         this.nombre = nombre;
     }
 
+    public Ciudad() {
+    }
+
     public int getCodCiudad() {
         return codCiudad;
     }
-    
+
     public void setCodCiudad(int codCiudad) {
         this.codCiudad = codCiudad;
     }

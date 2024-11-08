@@ -76,20 +76,41 @@ public class CiudadData {
 
         }
     }
-    
+
     public ArrayList<Integer> listarCiudades() {
         ArrayList<Integer> ListaCiudades = new ArrayList();
         String sql = "SELECT codCiudad FROM ciudad ";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
-           ResultSet rs = ps.executeQuery();
-          
+            ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 ListaCiudades.add(rs.getInt("codCiudad"));
-                 } 
+            }
         } catch (SQLException ex) {
-         JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Ciudad");
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Ciudad");
         }
         return ListaCiudades;
-    } 
+    }
+
+    public Ciudad buscarCiudadPorID(int codCiudad) {
+        String sql = "SELECT codCiudad , nombre FROM ciudad "
+                + "WHERE codCiudad = ? ";
+        Ciudad ciudad = null;
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, codCiudad);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ciudad = new Ciudad();
+                ciudad.setCodCiudad(rs.getInt("codCiudad"));
+                ciudad.setNombre(rs.getString("nombre"));
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontro una ciudad con ese codigo");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Ciudad");
+        }
+        return ciudad;
+    }
 }
