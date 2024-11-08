@@ -7,7 +7,9 @@ package Persistencia;
 import Entidades.Ciudad;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -74,4 +76,20 @@ public class CiudadData {
 
         }
     }
+    
+    public ArrayList<Integer> listarCiudades() {
+        ArrayList<Integer> ListaCiudades = new ArrayList();
+        String sql = "SELECT codCiudad FROM ciudad ";
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+           ResultSet rs = ps.executeQuery();
+          
+            while (rs.next()) {
+                ListaCiudades.add(rs.getInt("codCiudad"));
+                 } 
+        } catch (SQLException ex) {
+         JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Ciudad");
+        }
+        return ListaCiudades;
+    } 
 }

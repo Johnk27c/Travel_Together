@@ -4,6 +4,8 @@
  */
 package Entidades;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Franco
@@ -12,13 +14,13 @@ public class Turista {
     private int dni;
     private String nombre;
     private String apellido;
-    private int edad;
+    private LocalDate fechaNac;
 
-    public Turista(int dni, String nombre, String apellido, int edad) {
+    public Turista(int dni, String nombre, String apellido, LocalDate fechaNac) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.edad = edad;
+        this.fechaNac = fechaNac;
     }
 
     public Turista() {
@@ -48,17 +50,17 @@ public class Turista {
         this.apellido = apellido;
     }
 
-    public int getEdad() {
-        return edad;
+        public LocalDate getFechaNac() {
+        return fechaNac;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public void setFechaNac(LocalDate fechaNac) {
+        this.fechaNac = fechaNac;
     }
 
     @Override
     public String toString() {
-        return "Turista{" + "dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", edad=" + edad + '}';
+        return "Turista{" + "dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + "fechaNacimiento=" + fechaNac + '}';
     }
 
     

@@ -22,15 +22,15 @@ public class TuristaData {
     
     public void guardarTurista(Turista turista) {
 
-        String sql = "INSERT INTO turista (dni, apellido, nombre, edad)"
-                + "VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO turista (dni, apellido, nombre, FechaNac)"
+                + "VALUES(?, ?, ?, ? )";
 
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, turista.getDni());
             ps.setString(2, turista.getApellido());
-            ps.setString(3, turista.getNombre());
-            ps.setInt(4, turista.getEdad());
+            ps.setString(3, turista.getNombre()); 
+            ps.setDate(4, java.sql.Date.valueOf(turista.getFechaNac()));
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "El turista ha sido cargado con éxito.");
             ps.close();
@@ -41,14 +41,14 @@ public class TuristaData {
     }
     
     public void modificarTurista(Turista turista) {
-        String sql = "UPDATE turista SET nombre = ?, apellido = ?, edad = ? "
+        String sql = "UPDATE turista SET nombre = ?, apellido = ?, FechaNac = ? "
                 + "WHERE dni = ?";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
-            ps.setString(1, turista.getNombre());
-            ps.setString(2, turista.getApellido());
-            ps.setInt(3, turista.getEdad());
-            ps.setInt(4, turista.getDni());
+             ps.setString(1, turista.getNombre());
+             ps.setString(2, turista.getApellido());
+             ps.setDate(3, java.sql.Date.valueOf(turista.getFechaNac()));
+             ps.setInt(4, turista.getDni());
             int exito = ps.executeUpdate();
             if (exito == 1) {
                 JOptionPane.showMessageDialog(null, "El turista ha sido modificado con éxito.");
@@ -79,7 +79,7 @@ public class TuristaData {
     }
     
     public Turista buscarTuristaPorDNI(int dni) {
-        String sql = "SELECT dni, nombre, apellido, edad FROM turista WHERE  dni = ? ";
+        String sql = "SELECT dni, nombre, apellido, FechaNac FROM turista WHERE  dni = ? ";
         Turista turista = null;
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -90,7 +90,7 @@ public class TuristaData {
                 turista.setDni(rs.getInt("dni"));
                 turista.setApellido(rs.getString("apellido"));
                 turista.setNombre(rs.getString("nombre"));
-                turista.setEdad(rs.getInt("edad"));
+                turista.setFechaNac(rs.getDate("FechaNac").toLocalDate());
             } else {
                 JOptionPane.showMessageDialog(null, "No existe un turista con el DNI indicado");
             }
