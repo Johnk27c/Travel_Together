@@ -15,6 +15,9 @@ public class Pasaje {
     private String transporte;
     private double precio;
 
+    public Pasaje(){
+    }
+    
     public Pasaje(int codPasaje, LocalDateTime fechaHora, Ciudad ciudadOrigen, Ciudad ciudadDestino, int asiento, String transporte, double precio) {
         this.codPasaje = codPasaje;
         this.fechaHora = fechaHora;

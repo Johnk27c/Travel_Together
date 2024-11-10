@@ -18,6 +18,10 @@ public class Paquete {
     double montoFinal;
     double precioTraslados;
 
+    public Paquete(){
+        
+    }
+    
     public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, Pasaje boleto, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados) {
         this.codPaquete = codPaquete;
         this.fechaIni = fechaIni;

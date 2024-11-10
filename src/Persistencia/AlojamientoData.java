@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,7 +27,7 @@ public class AlojamientoData {
 
     public void guardarAlojamiento(Alojamiento alojamiento) {
 
-        String sql = "INSERT INTO alojamiento (codAlojamiento, nombreAlojamiento, tipo, direccion, ciudad, capacidad, habitaciones, banios, precio)"
+        String sql = "INSERT INTO alojamiento (codAlojamiento, nombreAlojamiento, tipo, direccion, codCiudad, capacidad, habitaciones, banios, precio)"
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
@@ -51,7 +52,7 @@ public class AlojamientoData {
 
     public void modificarAlojamiento(Alojamiento alojamiento) {
 
-        String sql = "UPDATE alojamiento SET nombreAlojamiento = ?, tipo = ?, direccion = ?, ciudad = ?, capacidad = ?, habitaciones = ?, banios = ?, precio = ? "
+        String sql = "UPDATE alojamiento SET nombreAlojamiento = ?, tipo = ?, direccion = ?, codCiudad = ?, capacidad = ?, habitaciones = ?, banios = ?, precio = ? "
                 + "WHERE codAlojamiento = ?";
 
         try {
@@ -95,18 +96,18 @@ public class AlojamientoData {
         }
     }
     
-    public ArrayList<Integer> mostrarCiudades() {
+    public HashSet<Integer> mostrarCiudades() {
 
-        String sql = "SELECT ciudad FROM alojamiento ";
+        String sql = "SELECT codCiudad FROM alojamiento ";
         
-        ArrayList<Integer>ciudades= new ArrayList <>();
+        HashSet<Integer>ciudades= new HashSet <>();
         
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             
             ResultSet res= ps.executeQuery();
             while (res.next()) {
-                ciudades.add(res.getInt("ciudad"));
+                ciudades.add(res.getInt("codCiudad"));
             }
             ps.close();
             

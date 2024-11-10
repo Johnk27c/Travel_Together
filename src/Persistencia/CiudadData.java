@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -77,8 +78,8 @@ public class CiudadData {
         }
     }
 
-    public ArrayList<Integer> listarCiudades() {
-        ArrayList<Integer> ListaCiudades = new ArrayList();
+    public HashSet<Integer> listarCiudades() {
+        HashSet<Integer> ListaCiudades = new HashSet();
         String sql = "SELECT codCiudad FROM ciudad ";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);

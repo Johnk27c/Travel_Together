@@ -1,22 +1,45 @@
 package Vistas;
 
+import Entidades.Ciudad;
+import Entidades.Paquete;
+import Persistencia.AlojamientoData;
+import Persistencia.CiudadData;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import javax.swing.JComboBox;
 
 /**
  *
  * @author Gabriel Jara
  */
 public class VistaContratarPaquete extends javax.swing.JInternalFrame {
-    
+
     private ArrayList<String> temporadas = new ArrayList();
+    private CiudadData accesoCiudad = new CiudadData();
+    private AlojamientoData accesoAlojamiento = new AlojamientoData();
+    private Paquete paqueteActual = new Paquete();
+    private HashSet<Ciudad> listaCiudadesOrigen = new HashSet();
+    private HashSet<Ciudad> listaCiudadesDestino = new HashSet();
+
     /**
      * Creates new form ContratarPaquete
      */
     public VistaContratarPaquete() {
+        initComponents();
         temporadas.add("Temporada Alta: Mes de julio y desde el 15 de diciembre al 28 de febrero");
         temporadas.add("Temporada Media: 21 de septiembre al 14 de diciembre// 17 de abril al 20 de abril (Sem. Santa)");
         temporadas.add("Temporada Baja: 1 de marzo al 17 de abril // 21 de abril al 30 de junio // 1 de agosto al 20 de diciembre");
-        initComponents();
+        cargarCiudadesOrigen();
+        actualizarCiudadesDestino();
+        cargarCbx(listaCiudadesOrigen, cbx_ciudadOrigen);
+        cargarCbx(listaCiudadesDestino, cbx_ciudadDestino);
+
+//        ArrayList<Ciudad> ciudades = new ArrayList();
+//        ciudades.add(new Ciudad(1,"Villa Mercedes"));
+//        ciudades.add(new Ciudad(2,"San Luis"));
+//        ciudades.add(new Ciudad(3, "Merlo"));
+//        cargarCbx(ciudades,cbx_ciudadOrigen);
     }
 
     /**
@@ -32,7 +55,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lbl_temporada = new javax.swing.JLabel();
         cbx_tipoPaquete = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -75,11 +98,14 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        setClosable(true);
+
         jLabel1.setText("Origen");
 
         jLabel2.setText("Destino");
 
-        jLabel3.setText("Temporada Alta:     Mes de julio y desde el 15 de diciembre de 2024 al 28 de febrero de 2025");
+        lbl_temporada.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_temporada.setText(" ");
 
         cbx_tipoPaquete.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Personalizado", "Estándar", "Económico" }));
 
@@ -98,6 +124,11 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         jLabel12.setText("Seleccione el tipo de paquete");
 
         cbx_temporada.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alta", "Media", "Baja" }));
+        cbx_temporada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbx_temporadaActionPerformed(evt);
+            }
+        });
 
         jLabel13.setText("Información del paquete (El monto es por persona)");
 
@@ -136,6 +167,11 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
 
         cbx_ciudadOrigen.setToolTipText("");
         cbx_ciudadOrigen.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        cbx_ciudadOrigen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbx_ciudadOrigenActionPerformed(evt);
+            }
+        });
 
         jLabel18.setText("IMPORTANTE: Una vez contratado el paquete, no se podrá modificar la fecha de viaje");
 
@@ -168,7 +204,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(date_fechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_temporada, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(45, 45, 45))
                     .addGroup(layout.createSequentialGroup()
@@ -207,10 +243,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(32, 32, 32)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(232, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1)
@@ -221,17 +257,12 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(78, 78, 78)
                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel13)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                            .addComponent(jLabel13)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel12)
-                                                .addGap(37, 37, 37)
-                                                .addComponent(cbx_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(178, 178, 178)))))
+                                        .addComponent(jLabel12)
+                                        .addGap(37, 37, 37)
+                                        .addComponent(cbx_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -256,7 +287,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6)
                     .addComponent(cbx_temporada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
+                .addComponent(lbl_temporada)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel18)
                 .addGap(18, 18, 18)
@@ -298,11 +329,80 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbx_temporadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_temporadaActionPerformed
+        if (cbx_temporada.getSelectedItem().equals("Alta")) {
+            lbl_temporada.setText(temporadas.get(0));
+        } else if (cbx_temporada.getSelectedItem().equals("Media")) {
+            lbl_temporada.setText(temporadas.get(1));
+        } else {
+            lbl_temporada.setText(temporadas.get(2));
+        }
+    }//GEN-LAST:event_cbx_temporadaActionPerformed
+
+    private void cbx_ciudadOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_ciudadOrigenActionPerformed
+        Ciudad cdadOrigen = (Ciudad) cbx_ciudadOrigen.getSelectedItem();
+        Ciudad cdadDestino = (Ciudad) cbx_ciudadDestino.getSelectedItem();
+        System.out.println(cdadOrigen);
+        System.out.println(cdadDestino);
+        if (cdadDestino == null) {
+            actualizarCiudadesDestino();
+            cargarCbx(listaCiudadesDestino, cbx_ciudadDestino);
+        } else if(cdadDestino.getCodCiudad() == cdadOrigen.getCodCiudad()){
+            actualizarCiudadesDestino();
+            cargarCbx(listaCiudadesDestino, cbx_ciudadDestino);
+    }
+    }//GEN-LAST:event_cbx_ciudadOrigenActionPerformed
+
+    private void cargarCbx(HashSet lista, JComboBox comboBox) {
+        comboBox.removeAllItems();
+        if (lista.size() > 0) {
+            for (Object ob : lista) {
+                comboBox.addItem(ob);
+            }
+        }
+        comboBox.setSelectedIndex(-1);
+    }
+
+    private void actualizarCiudadesDestino() { //Actualiza array de ciudades de destino en base a la ciudad de Origen seleccionada
+        HashSet<Ciudad> listaDestino = new HashSet();
+
+        HashSet<Integer> idCiudadesDestino = accesoAlojamiento.mostrarCiudades();
+        System.out.println(idCiudadesDestino);
+        for (Integer id : idCiudadesDestino) {
+            listaDestino.add((Ciudad) accesoCiudad.buscarCiudadPorID(id));
+        }
+        if (cbx_ciudadOrigen.getSelectedItem() != null) {
+            Ciudad ciudadSeleccionada = (Ciudad) cbx_ciudadOrigen.getSelectedItem();
+            Iterator<Ciudad> it = listaDestino.iterator();
+            while (it.hasNext()) {
+                Ciudad cdad = it.next();
+                if (ciudadSeleccionada.getCodCiudad() == cdad.getCodCiudad()) {
+                    it.remove();
+                }
+            }
+        }
+        listaCiudadesDestino = listaDestino;
+        System.out.println(listaDestino);
+    }
+
+    private void cargarCiudadesOrigen() {
+        HashSet<Ciudad> listaOrigen = new HashSet();
+
+        HashSet<Integer> idCiudadesOrigen = accesoCiudad.listarCiudades();
+        for (Integer id : idCiudadesOrigen) {
+            listaOrigen.add((Ciudad) accesoCiudad.buscarCiudadPorID(id));
+        }
+        if (cbx_ciudadDestino.getSelectedItem() != null) {
+            listaOrigen.remove((Ciudad) cbx_ciudadDestino.getSelectedItem());
+        }
+        listaCiudadesOrigen = listaOrigen;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_contratar;
-    private javax.swing.JComboBox<String> cbx_ciudadDestino;
-    private javax.swing.JComboBox<String> cbx_ciudadOrigen;
+    private javax.swing.JComboBox<Ciudad> cbx_ciudadDestino;
+    private javax.swing.JComboBox<Ciudad> cbx_ciudadOrigen;
     private javax.swing.JComboBox<String> cbx_temporada;
     private javax.swing.JComboBox<String> cbx_tipoPaquete;
     private com.toedter.calendar.JDateChooser date_fechaFin;
@@ -320,7 +420,6 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -330,6 +429,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lbl_temporada;
     private javax.swing.JSpinner spn_cantAdultos;
     private javax.swing.JSpinner spn_cantMenores;
     private javax.swing.JTable tabla_informacion;
