@@ -10,7 +10,9 @@ public class Paquete {
     private int codPaquete;
     private LocalDate fechaIni;
     private LocalDate fechaFin;
+    private LocalDate fechaCompra;
     private Pasaje boleto;
+    private String temporada;
     private Estadia estadia;
     private Pension regimen;
     private Turista turista;
@@ -21,12 +23,14 @@ public class Paquete {
     public Paquete(){
         
     }
-    
-    public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, Pasaje boleto, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados) {
+
+    public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, LocalDate fechaCompra, Pasaje boleto, String temporada, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados) {
         this.codPaquete = codPaquete;
         this.fechaIni = fechaIni;
         this.fechaFin = fechaFin;
+        this.fechaCompra = fechaCompra;
         this.boleto = boleto;
+        this.temporada = temporada;
         this.estadia = estadia;
         this.regimen = regimen;
         this.turista = turista;
@@ -59,12 +63,28 @@ public class Paquete {
         this.fechaFin = fechaFin;
     }
 
+    public LocalDate getFechaCompra() {
+        return fechaCompra;
+    }
+
+    public void setFechaCompra(LocalDate fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
     public Pasaje getBoleto() {
         return boleto;
     }
 
     public void setBoleto(Pasaje boleto) {
         this.boleto = boleto;
+    }
+
+    public String getTemporada() {
+        return temporada;
+    }
+
+    public void setTemporada(String temporada) {
+        this.temporada = temporada;
     }
 
     public Estadia getEstadia() {
@@ -114,5 +134,7 @@ public class Paquete {
     public void setPrecioTraslados(double precioTraslados) {
         this.precioTraslados = precioTraslados;
     }
+    
+    
     
 }

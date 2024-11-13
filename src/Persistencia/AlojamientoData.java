@@ -96,6 +96,8 @@ public class AlojamientoData {
         }
     }
     
+    
+    
     public HashSet<Integer> mostrarCiudades() {
 
         String sql = "SELECT codCiudad FROM alojamiento ";

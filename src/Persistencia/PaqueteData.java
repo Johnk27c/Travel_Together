@@ -24,21 +24,23 @@ public class PaqueteData {
 
     public void guardarPaquete(Paquete paquete) {
 
-        String sql = "INSERT INTO paquete (codPaquete, fechaIni, fechaFin, boleto, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslados)"
-                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO paquete (codPaquete, fechaIni, fechaFin, fechaCompra, boleto, temporada, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslados)"
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, paquete.getCodPaquete());
             ps.setString(2, paquete.getFechaFin().toString());
             ps.setString(3, paquete.getFechaFin().toString());
-            ps.setInt(4, paquete.getBoleto().getCodPasaje());
-            ps.setInt(5, paquete.getEstadia().getCodEstadia());
-            ps.setInt(6, paquete.getRegimen().getCodAdicional());
-            ps.setInt(7, paquete.getTurista().getDni());
-            ps.setInt(8, paquete.getComprador().getDni());
-            ps.setDouble(9, paquete.getMontoFinal());
-            ps.setDouble(10, paquete.getPrecioTraslados());
+            ps.setString(4, paquete.getFechaCompra().toString());            
+            ps.setInt(5, paquete.getBoleto().getCodPasaje());
+            ps.setString(6, paquete.getTemporada());           
+            ps.setInt(7, paquete.getEstadia().getCodEstadia());
+            ps.setInt(8, paquete.getRegimen().getCodAdicional());
+            ps.setInt(9, paquete.getTurista().getDni());
+            ps.setInt(10, paquete.getComprador().getDni());
+            ps.setDouble(11, paquete.getMontoFinal());
+            ps.setDouble(12, paquete.getPrecioTraslados());
             
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "El paquete ha sido cargado con éxito.");
@@ -51,7 +53,7 @@ public class PaqueteData {
     
     public void modificarPaquete(Paquete paquete) {    
 
-        String sql = "UPDATE paquete SET codPaquete  = ?, fechaIni = ?, fechaFin = ?, boleto = ?, estadia = ?, regimen = ?, dniTurista = ?, dniComprador = ?, montofinal = ?, precioTraslados = ? "
+        String sql = "UPDATE paquete SET codPaquete  = ?, fechaIni = ?, fechaFin = ?, fechaCompra = ?, boleto = ?, temporada = ?, estadia = ?, regimen = ?, dniTurista = ?, dniComprador = ?, montofinal = ?, precioTraslados = ? "
                 + "WHERE codPaquete = ?";
 
         try {
@@ -59,13 +61,15 @@ public class PaqueteData {
             ps.setInt(1, paquete.getCodPaquete());
             ps.setString(2, paquete.getFechaFin().toString());
             ps.setString(3, paquete.getFechaFin().toString());
-            ps.setInt(4, paquete.getBoleto().getCodPasaje());
-            ps.setInt(5, paquete.getEstadia().getCodEstadia());
-            ps.setInt(6, paquete.getRegimen().getCodAdicional());
-            ps.setInt(7, paquete.getTurista().getDni());
-            ps.setInt(8, paquete.getComprador().getDni());
-            ps.setDouble(9, paquete.getMontoFinal());
-            ps.setDouble(10, paquete.getPrecioTraslados());
+            ps.setString(4, paquete.getFechaCompra().toString());            
+            ps.setInt(5, paquete.getBoleto().getCodPasaje());
+            ps.setString(6, paquete.getTemporada());           
+            ps.setInt(7, paquete.getEstadia().getCodEstadia());
+            ps.setInt(8, paquete.getRegimen().getCodAdicional());
+            ps.setInt(9, paquete.getTurista().getDni());
+            ps.setInt(10, paquete.getComprador().getDni());
+            ps.setDouble(11, paquete.getMontoFinal());
+            ps.setDouble(12, paquete.getPrecioTraslados());
             
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "El paquete ha sido cargado con éxito.");
