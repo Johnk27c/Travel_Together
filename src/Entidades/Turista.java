@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 /**
  *
@@ -57,7 +58,12 @@ public class Turista {
     public void setFechaNac(LocalDate fechaNac) {
         this.fechaNac = fechaNac;
     }
-
+    public int calcularEdad() {
+    if (fechaNac != null) {
+        return Period.between(fechaNac, LocalDate.now()).getYears();
+    }
+    return 0; 
+}
     @Override
     public String toString() {
         return "Turista{" + "dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + "fechaNacimiento=" + fechaNac + '}';

@@ -7,23 +7,30 @@ package Vistas;
 import Entidades.Turista;
 import Persistencia.TuristaData;
 import java.time.LocalDate;
-
-
-
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Usuario
  */
 public class VistaCargaPersonas extends javax.swing.JInternalFrame {
-private  TuristaData turistaD = new TuristaData() ;
-private Turista turistaActual = null;
+
+    private TuristaData turistaD = new TuristaData();
+    private Turista turistaActual = null;
+    private HashSet<Turista> listaTuristas = new HashSet();
+    private DefaultTableModel modelo = new DefaultTableModel();
+
     /**
      * Creates new form VistaCargaPersonas
      */
     public VistaCargaPersonas() {
         initComponents();
-       
+        armarCabecera();
+
     }
 
     /**
@@ -35,8 +42,6 @@ private Turista turistaActual = null;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jT_nombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -48,30 +53,11 @@ private Turista turistaActual = null;
         jB_buscar = new javax.swing.JButton();
         jB_agregar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jT_personas = new javax.swing.JTable();
+        jTB_turistas = new javax.swing.JTable();
         jB_finalizar = new javax.swing.JButton();
         jD_fechaNacimiento = new com.toedter.calendar.JDateChooser();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         jLabel1.setText("Nombre :");
-
-        jT_nombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jT_nombreActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Apellido");
 
@@ -96,7 +82,7 @@ private Turista turistaActual = null;
             }
         });
 
-        jT_personas.setModel(new javax.swing.table.DefaultTableModel(
+        jTB_turistas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -107,10 +93,15 @@ private Turista turistaActual = null;
                 "DNI", "Nombre", "Apellido", "Edad"
             }
         ));
-        jScrollPane2.setViewportView(jT_personas);
+        jScrollPane2.setViewportView(jTB_turistas);
 
         jB_finalizar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jB_finalizar.setText("Finalizar Compra");
+        jB_finalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_finalizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,7 +128,7 @@ private Turista turistaActual = null;
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(58, 58, 58)
-                        .addComponent(jD_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jD_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(25, Short.MAX_VALUE)
@@ -188,18 +179,63 @@ private Turista turistaActual = null;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jT_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jT_nombreActionPerformed
-        
-    }//GEN-LAST:event_jT_nombreActionPerformed
-
     private void jB_agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_agregarActionPerformed
-       
+        try {
+            int dni = Integer.valueOf(jT_dni.getText());
+            String nombre = jT_nombre.getText();
+            String apellido = jT_apellido.getText();
+
+            if (nombre.isEmpty() || apellido.isEmpty() || jD_fechaNacimiento.getDate() == null) {
+                JOptionPane.showMessageDialog(this, "No deben haber campos vacios");
+                return;
+            }
+            for (Turista t : listaTuristas) {
+                if (t.getDni() == dni) {
+                    JOptionPane.showMessageDialog(this, "El DNI ingresado ya existe");
+                    return;
+                }
+            }
+            LocalDate fechaNac = jD_fechaNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Turista nuevoTurista = new Turista(dni, nombre, apellido, fechaNac);
+            listaTuristas.add(nuevoTurista);
+            cargarTabla();
+            limpiarCampos();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Debe Ingresar un DNI valido");
+
+        }
     }//GEN-LAST:event_jB_agregarActionPerformed
 
     private void jB_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_buscarActionPerformed
- 
+        try {
+            int dni = Integer.valueOf(jT_dni.getText());
+            turistaActual = turistaD.buscarTuristaPorDNI(dni);
+            if (turistaActual != null) {
+                jT_nombre.setText(turistaActual.getNombre());
+                jT_apellido.setText(turistaActual.getApellido());
+                LocalDate lc = turistaActual.getFechaNac();
+                java.util.Date date = java.util.Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                jD_fechaNacimiento.setDate(date);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un DNI valido");
+        }
 
     }//GEN-LAST:event_jB_buscarActionPerformed
+
+    private void jB_finalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_finalizarActionPerformed
+        if (listaTuristas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar turistas para finalizar su compra");
+            return;
+        }
+        for (Turista t : listaTuristas) {
+            turistaD.guardarTurista(t);
+        }
+        JOptionPane.showMessageDialog(this, "Solo pueden darse de baja 30 dias antes y modificaciones 10 dias antes de la fecha de inicio");
+        listaTuristas.clear();
+        limpiarCampos();
+        cargarTabla();
+    }//GEN-LAST:event_jB_finalizarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -212,12 +248,31 @@ private Turista turistaActual = null;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTB_turistas;
     private javax.swing.JTextField jT_apellido;
     private javax.swing.JTextField jT_dni;
     private javax.swing.JTextField jT_nombre;
-    private javax.swing.JTable jT_personas;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+    private void armarCabecera() {
+        modelo.addColumn("DNI");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Apellido");
+        modelo.addColumn("Edad");
+        jTB_turistas.setModel(modelo);
+    }
+
+    private void limpiarCampos() {
+        jT_dni.setText("");
+        jT_nombre.setText("");
+        jT_apellido.setText("");
+        jD_fechaNacimiento.setDate(null);
+    }
+
+    private void cargarTabla() {
+        modelo.setRowCount(0);
+        for (Turista t : listaTuristas) {
+            modelo.addRow(new Object[]{t.getDni(), t.getNombre(), t.getApellido(), t.calcularEdad()});
+        }
+    }
 }
