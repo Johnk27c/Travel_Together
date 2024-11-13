@@ -6,7 +6,10 @@ package Vistas;
 
 import Entidades.Alojamiento;
 import Entidades.Pension;
+import Persistencia.PensionData;
 import java.util.ArrayList;
+import java.util.HashSet;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,7 +20,8 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
     
     ArrayList<Alojamiento> alojamientos = new ArrayList();
     ArrayList<Pension> pensiones = new ArrayList();
-    
+    private HashSet<String> listarPensiones = new HashSet();
+    private PensionData accesoPension = new PensionData();    
     private DefaultTableModel modelo = new DefaultTableModel();
 
     /**
@@ -29,6 +33,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         modelo = new DefaultTableModel();
         cargarCbxAlojamientos();// carga los tipos de alojamientos
         cargarCbxPension();// carga las pensiones
+        cargarCbxTransporte();// carga los transportes
         armarCabecera();
     }
 
@@ -57,6 +62,12 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
 
         jLabel1.setText("Tipo de alojamiento:");
+
+        jCbx_alojamientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCbx_alojamientosActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("ALOJAMIENTOS DISPONIBLES");
 
@@ -92,8 +103,6 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         });
 
         jLabel5.setText("Transporte:");
-
-        jCbx_transporte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Avión", "Colectivo" }));
 
         jButton1.setText("Confirmar preferencias");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -203,6 +212,10 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jCbx_alojamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCbx_alojamientosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCbx_alojamientosActionPerformed
+
     private void armarCabecera() {
         ArrayList<Object> filaCabecera = new ArrayList<>();
         filaCabecera.add("Nombre");
@@ -230,18 +243,29 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             jCbx_alojamientos.addItem(alojamiento);
         }
     }
-    
-    public void cargarCbxPension() {
-        for (Pension pension : pensiones) {
-            jCbx_pension.addItem(pension);
+        
+    public void cargarCbxPension() {               
+        HashSet<String>listaPensionespornombre = accesoPension.listarPensiones();
+        jCbx_pension.removeAllItems();
+        for (String nombre : listaPensionespornombre) {
+            jCbx_pension.addItem(nombre);
         }
+        
+        listarPensiones = listaPensionespornombre;
     }
     
+    public void cargarCbxTransporte(){
+        ArrayList<String>transporte= new ArrayList();
+        String[] transportes = {"Avión - PRIMERA  CLASE", "Avión - CLASE MEDIA", "Colectivo - EJECUTIVO", "Colectivo - SEMICAMA"}; 
+        for (String elemento : transportes) { 
+            jCbx_transporte.addItem(elemento);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<Alojamiento> jCbx_alojamientos;
-    private javax.swing.JComboBox<Pension> jCbx_pension;
+    private javax.swing.JComboBox<String> jCbx_pension;
     private javax.swing.JComboBox<String> jCbx_transporte;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

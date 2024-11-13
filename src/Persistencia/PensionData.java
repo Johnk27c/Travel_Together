@@ -104,5 +104,21 @@ public class PensionData {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla pension.");
         }
     }
+    
+    public HashSet<String> listarPensiones() {
+        HashSet<String>listaPensiones = new HashSet();
+        String sql = "SELECT nombre FROM pension ";
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                listaPensiones.add(rs.getString("nombre"));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Pension");
+        }
+        return listaPensiones;
+    }
        
 }
