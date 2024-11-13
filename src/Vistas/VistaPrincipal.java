@@ -138,7 +138,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jDesktopPanel.repaint();
         VistaContratarPaquete vistaContratarPaquete = new VistaContratarPaquete();
         vistaContratarPaquete.setVisible(true);
-        jDesktopPanel.add(vistaContratarPaquete);                                    
+        jDesktopPanel.add(vistaContratarPaquete);
     }//GEN-LAST:event_jMenuItem_contratarPaqueteActionPerformed
 
     private void jMenuItem_consultasClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_consultasClientesActionPerformed
@@ -146,10 +146,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jDesktopPanel.repaint();
         VistaConsultaCliente vistaConsultasCliente = new VistaConsultaCliente();
         vistaConsultasCliente.setVisible(true);
-        jDesktopPanel.add(vistaConsultasCliente);                                    
+        jDesktopPanel.add(vistaConsultasCliente);
     }//GEN-LAST:event_jMenuItem_consultasClientesActionPerformed
 
-    
+
     private void jMenuItem_estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_estadisticasActionPerformed
         jDesktopPanel.removeAll();
         jDesktopPanel.repaint();
@@ -162,16 +162,14 @@ public class VistaPrincipal extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenu_SalirMouseClicked
 
-<<<<<<< Updated upstream
     private void jM_cargaPersonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jM_cargaPersonasActionPerformed
         jDesktopPanel.removeAll();
         jDesktopPanel.repaint();
-    VistaCargaPersonas vistaCargaPersonas = new VistaCargaPersonas();
-    vistaCargaPersonas.setVisible(true);
-    jDesktopPanel.add(vistaCargaPersonas);
-
+        VistaCargaPersonas vistaCargaPersonas = new VistaCargaPersonas();
+        vistaCargaPersonas.setVisible(true);
+        jDesktopPanel.add(vistaCargaPersonas);
     }//GEN-LAST:event_jM_cargaPersonasActionPerformed
-=======
+
     private void jMenuItem_personalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_personalizadoActionPerformed
         jDesktopPanel.removeAll();
         jDesktopPanel.repaint();
@@ -179,7 +177,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
         vistaPersonalizado.setVisible(true);
         jDesktopPanel.add(vistaPersonalizado);
     }//GEN-LAST:event_jMenuItem_personalizadoActionPerformed
->>>>>>> Stashed changes
 
     /**
      * @param args the command line arguments
@@ -213,8 +210,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
             public void run() {
                 new VistaPrincipal().setVisible(true);
             }
-        });   
-        
+        });
+
 //        TuristaData turData = new TuristaData();
 //        Turista turista1 = new Turista(37090900, "Jon", "Cuello", 31);
 //        Turista turista2 = new Turista(43765347, "Rodrigo", "Guerrero", 23);
@@ -228,7 +225,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
 //        turData.guardarTurista(turista4);
 //        turData.guardarTurista(turista5);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPanel;
     private javax.swing.JMenuItem jM_cargaPersonas;

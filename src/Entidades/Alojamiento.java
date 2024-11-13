@@ -28,6 +28,12 @@ public class Alojamiento {
         this.direccion = direccion;
     }
 
+    public Alojamiento() {
+    }
+
+    
+    
+
     public int getCodAlojam() {
         return codAlojam;
     }

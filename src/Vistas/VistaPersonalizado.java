@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
 public class VistaPersonalizado extends javax.swing.JInternalFrame {
     
     ArrayList<Alojamiento> alojamientos = new ArrayList();
-    ArrayList<Pension> pensiones = new ArrayList();
-    private HashSet<String> listarPensiones = new HashSet();
+    ArrayList<String> pensiones = new ArrayList();
+    private HashSet<Pension> listarPensiones = new HashSet();
     private PensionData accesoPension = new PensionData();    
     private DefaultTableModel modelo = new DefaultTableModel();
 
@@ -146,10 +146,10 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3)
                             .addComponent(jLabel5))
                         .addGap(51, 51, 51)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jCbx_pension, 0, 232, Short.MAX_VALUE)
-                            .addComponent(jCbx_transporte, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(115, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCbx_transporte, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCbx_pension, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -239,18 +239,19 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
     }
     
     public void cargarCbxAlojamientos() {
-        for (Alojamiento alojamiento : alojamientos) {
-            jCbx_alojamientos.addItem(alojamiento);
-        }
+       ArrayList<String>tipodealojamiento= new ArrayList();
+        String[] tiposdealojamientos = {"Cabaña", "Posada", "Hotel"}; 
+        for (String elemento : tiposdealojamientos) { 
+            jCbx_alojamientos.addItem(elemento);
+        } 
     }
         
     public void cargarCbxPension() {               
-        HashSet<String>listaPensionespornombre = accesoPension.listarPensiones();
+        HashSet<Pension>listaPensionespornombre = accesoPension.listarPensiones();
         jCbx_pension.removeAllItems();
-        for (String nombre : listaPensionespornombre) {
+        for (Pension nombre : listaPensionespornombre) {
             jCbx_pension.addItem(nombre);
         }
-        
         listarPensiones = listaPensionespornombre;
     }
     
@@ -264,8 +265,8 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<Alojamiento> jCbx_alojamientos;
-    private javax.swing.JComboBox<String> jCbx_pension;
+    private javax.swing.JComboBox<String> jCbx_alojamientos;
+    private javax.swing.JComboBox<Pension> jCbx_pension;
     private javax.swing.JComboBox<String> jCbx_transporte;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

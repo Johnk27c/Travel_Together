@@ -105,15 +105,20 @@ public class PensionData {
         }
     }
     
-    public HashSet<String> listarPensiones() {
-        HashSet<String>listaPensiones = new HashSet();
-        String sql = "SELECT nombre FROM pension ";
+    public HashSet<Pension> listarPensiones() {
+        HashSet<Pension>listaPensiones = new HashSet();
+        String sql = "SELECT codPension, nombre, porcentaje FROM pension ";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                listaPensiones.add(rs.getString("nombre"));
+                int codPension = rs.getInt("codPension");
+                String nombre = rs.getString("nombre");
+                double porcentaje = rs.getDouble("porcentaje");
+                
+                Pension pension= new Pension(codPension, nombre, porcentaje);
+                listaPensiones.add(pension);
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Pension");
