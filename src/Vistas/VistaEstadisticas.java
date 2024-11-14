@@ -40,6 +40,8 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
+        setClosable(true);
+
         jLabel1.setText("Paquetes comprados últimos 2 meses");
 
         jTable_paquetes.setModel(new javax.swing.table.DefaultTableModel(
@@ -162,16 +164,12 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
 
     
     private void armarCabecera(){
-        ArrayList<Object>cabecera = new ArrayList<>();
-        cabecera.add("codPaq");
-        cabecera.add("Nombre");
-        cabecera.add("Destino");
-        cabecera.add("Tipo");
-        cabecera.add("Fecha In");
-        cabecera.add("Fecha Fin");
-        for (Object i : cabecera) {
-            tabla.addColumn(i);
-        }
+        tabla.addColumn("codPaq");
+        tabla.addColumn("Nombre");
+        tabla.addColumn("Destino");
+        tabla.addColumn("Tipo");
+        tabla.addColumn("Fecha In");
+        tabla.addColumn("Fecha Fin");
         jTable_paquetes.setModel(tabla);
     }
 
