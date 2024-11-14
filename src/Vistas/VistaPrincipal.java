@@ -147,7 +147,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void jMenuItem_consultasClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_consultasClientesActionPerformed
         jDesktopPanel.removeAll();
         jDesktopPanel.repaint();
-        VistaConsultaCliente vistaConsultasCliente = new VistaConsultaCliente();
+        VistaConsultaCliente vistaConsultasCliente = new VistaConsultaCliente(jDesktopPanel);
         vistaConsultasCliente.setVisible(true);
         jDesktopPanel.add(vistaConsultasCliente);
     }//GEN-LAST:event_jMenuItem_consultasClientesActionPerformed

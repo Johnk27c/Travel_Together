@@ -144,6 +144,11 @@ public class Paquete {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    @Override
+    public String toString() {
+        return "Paquete{" + "codPaquete=" + codPaquete + ", fechaIni=" + fechaIni + ", fechaFin=" + fechaFin + ", fechaCompra=" + fechaCompra + ", boleto=" + boleto + ", temporada=" + temporada + ", estadia=" + estadia + ", regimen=" + regimen + ", turista=" + turista + ", comprador=" + comprador + ", tipo=" + tipo + ", montoFinal=" + montoFinal + ", precioTraslados=" + precioTraslados + '}';
+    }
     
     
     

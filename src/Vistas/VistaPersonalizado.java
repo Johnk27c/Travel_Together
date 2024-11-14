@@ -13,6 +13,7 @@ import Persistencia.PensionData;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Jon_kevin27
  */
 public class VistaPersonalizado extends javax.swing.JInternalFrame {
-
+    
     ArrayList<Alojamiento> alojamientos = new ArrayList();
     ArrayList<String> pensiones = new ArrayList();
     private HashSet<Pension> listarPensiones = new HashSet();
@@ -222,7 +223,26 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jRbt_noActionPerformed
 
     private void btn_confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarActionPerformed
-        System.out.println(opcionesSeleccionadasOK());
+        if (opcionesSeleccionadasOK()) {
+            paqueteActual.getBoleto().setTransporte((String) jCbx_transporte.getSelectedItem());
+            switch ((String) jCbx_transporte.getSelectedItem()) {
+                case "Avión - PRIMERA  CLASE":
+                    paqueteActual.getBoleto().setPrecio(150000);
+                    break;
+                case "Avión - CLASE MEDIA":
+                    paqueteActual.getBoleto().setPrecio(100000);
+                    break;
+                case "Colectivo - EJECUTIVO":
+                    paqueteActual.getBoleto().setPrecio(60000);
+                    break;
+                default:
+                    paqueteActual.getBoleto().setPrecio(35000);
+                    break;
+            }
+            paqueteActual.setRegimen((Pension) jCbx_pension.getSelectedItem());
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Debe seleccionar todas las opciones");
+        }
     }//GEN-LAST:event_btn_confirmarActionPerformed
 
     private void jCbx_alojamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCbx_alojamientosActionPerformed
@@ -234,7 +254,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_jCbx_alojamientosActionPerformed
-
+    
     private void armarCabecera() {
         ArrayList<Object> filaCabecera = new ArrayList<>();
         filaCabecera.add("Cod. Alojamiento");
@@ -249,15 +269,15 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         jTable_alojamientos.setModel(modelo);
     }
-
+    
     private void borrarfilaTabla() {
         int indice = modelo.getRowCount() - 1;
-
+        
         for (int i = indice; i >= 0; i--) {
             modelo.removeRow(i);
         }
     }
-
+    
     public void cargarCbxAlojamientos() {
         ArrayList<String> tipodealojamiento = new ArrayList();
         String[] tiposdealojamientos = {"Cabaña", "Posada", "Hotel"};
@@ -265,7 +285,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             jCbx_alojamientos.addItem(elemento);
         }
     }
-
+    
     public void cargarCbxPension() {
         HashSet<Pension> listaPensionespornombre = accesoPension.listarPensiones();
         jCbx_pension.removeAllItems();
@@ -274,7 +294,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         listarPensiones = listaPensionespornombre;
     }
-
+    
     public void cargarCbxTransporte() {
         ArrayList<String> transporte = new ArrayList();
         String[] transportes = {"Avión - PRIMERA  CLASE", "Avión - CLASE MEDIA", "Colectivo - EJECUTIVO", "Colectivo - SEMICAMA"};
@@ -282,7 +302,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             jCbx_transporte.addItem(elemento);
         }
     }
-
+    
     public void cargarAlojamientosDestino() {
         Ciudad origen = paqueteActual.getBoleto().getCiudadDestino();
         this.alojamientos = accesoAlojamiento.buscarAlojamientPorCiudad(origen.getCodCiudad());
@@ -290,7 +310,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             modelo.addRow(new Object[]{alojamiento.getCodAlojam(), alojamiento.getNombreAlojamiento(), alojamiento.getDireccion(), alojamiento.getCapacidad(), alojamiento.getHabitaciones(), alojamiento.getBanios(), alojamiento.getPrecioNoche()});
         }
     }
-
+    
     public ArrayList<Alojamiento> filtrarAlojamientosPorTipo(String tipo) {
         ArrayList<Alojamiento> listaNueva = new ArrayList();
         if (jCbx_alojamientos.getSelectedItem() != null) {
@@ -302,7 +322,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         return listaNueva;
     }
-
+    
     private boolean opcionesSeleccionadasOK() {
         return jTable_alojamientos.getSelectedRow() != -1 && jCbx_pension.getSelectedItem() != null && (jRbt_si.isSelected() || jRbt_no.isSelected() && jCbx_transporte.getSelectedItem() != null);
     }
