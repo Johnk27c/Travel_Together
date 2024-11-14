@@ -2,6 +2,7 @@ package Persistencia;
 
 import Entidades.Estadia;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,12 +32,13 @@ public class EstadiaData {
             ps.setTimestamp(1, Timestamp.valueOf(estadia.getFechaHoraCheckin()));
             ps.setTimestamp(2, Timestamp.valueOf(estadia.getFechaHoraCheckout()));
             ps.setDouble(3, estadia.getMonto());
-            ps.setInt(4, estadia.getCodEstadia());
+            ps.setInt(4, estadia.getAlojamiento().getCodAlojam());
             ps.setBoolean(5, estadia.isVigencia());
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
+                estadia.setCodEstadia(rs.getInt(1));
                 JOptionPane.showMessageDialog(null, "Se ha generado una estadia.");
             }
             ps.close();

@@ -75,6 +75,11 @@ public class Estadia {
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
     }
+
+    @Override
+    public String toString() {
+        return "Estadia{" + "codEstadia=" + codEstadia + ", fechaHoraCheckin=" + fechaHoraCheckin + ", fechaHoraCheckout=" + fechaHoraCheckout + ", Alojamiento=" + Alojamiento + ", monto=" + monto + ", vigencia=" + vigencia + '}';
+    }
     
    
 }

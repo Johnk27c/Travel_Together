@@ -8,12 +8,11 @@ import Entidades.Pasaje;
 import Entidades.Pension;
 import Persistencia.AlojamientoData;
 import Persistencia.CiudadData;
+import Persistencia.PasajeData;
 import Persistencia.PensionData;
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private HashSet<Ciudad> listaCiudadesDestino = new HashSet();
     private DefaultTableModel modelo = new DefaultTableModel();
     private PensionData accesoPension = new PensionData();
+    private PasajeData accesoPasaje = new PasajeData();
     private boolean fechasOK;
     private Pension pensionActual;
     private Estadia estadiaActual;
@@ -51,6 +51,8 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     double precioTraslado;
     int cantidadDisponibleAlojamiento;
     boolean paqueteEstaListo;
+    int cantAdultos;
+    int cantMenores;
 
     /**
      * Creates new form ContratarPaquete
@@ -430,6 +432,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             pasaje = new Pasaje(pasarALocalDate(date_fechaInicio.getDate()).atStartOfDay(), (Ciudad) cbx_ciudadOrigen.getSelectedItem(), (Ciudad) cbx_ciudadDestino.getSelectedItem());
             paqueteActual.setBoleto(pasaje);
             paqueteActual.setTemporada((String) cbx_temporada.getSelectedItem());
+            estadiaActual = new Estadia();
+            estadiaActual.setFechaHoraCheckin(pasarALocalDate(date_fechaInicio.getDate()).atStartOfDay());
+            estadiaActual.setFechaHoraCheckout(pasarALocalDate(date_fechaFin.getDate()).atStartOfDay());
+            estadiaActual.setVigencia(true);
 
             switch (cbx_tipoPaquete.getSelectedItem().toString()) {
                 case "Personalizado":
@@ -443,15 +449,21 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     System.out.println("Personalizado");
                     break;
                 case "Estándar":
+                    paqueteActual.setTipo("Estándar");
                     Alojamiento alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Maximo");
                     pensionActual = accesoPension.buscarPorCodigo(2);
                     borrarfilaTabla();
                     precioEstadia = alo.getPrecioNoche() * diasEstadia();
                     precioTransporte = 100000;
                     paqueteActual.getBoleto().setPrecio(precioTransporte);
+                    paqueteActual.setRegimen(pensionActual);
                     precioPension = precioEstadia * pensionActual.getPorcentaje();
                     tipoTransporte = "Avión - CLASE MEDIA";
-                    cantidadDisponibleAlojamiento=alo.getCapacidad();
+                    cantidadDisponibleAlojamiento = alo.getCapacidad();
+                    estadiaActual.setAlojamiento(alo);
+                    estadiaActual.setMonto(precioEstadia);
+                    paqueteActual.setEstadia(estadiaActual);
+                    pasaje.setTransporte(tipoTransporte);
 
                     modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
                     modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
@@ -464,18 +476,25 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     modelo.addRow(new Object[]{"Recargo por temporada", cbx_temporada.getSelectedItem() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
                     precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
                     modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
-                    paqueteEstaListo=true;
+                    paqueteActual.setPrecioTraslados(0.01);
+                    paqueteEstaListo = true;
                     break;
                 default:
+                    paqueteActual.setTipo("Económico");
                     alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Minimo");
                     pensionActual = accesoPension.buscarPorCodigo(1);
                     borrarfilaTabla();
                     precioEstadia = alo.getPrecioNoche() * diasEstadia();
                     precioTransporte = 35000;
                     paqueteActual.getBoleto().setPrecio(precioTransporte);
+                    paqueteActual.setRegimen(pensionActual);
                     precioPension = precioEstadia * pensionActual.getPorcentaje();
                     tipoTransporte = "Colectivo - SEMICAMA";
-                    cantidadDisponibleAlojamiento=alo.getCapacidad();
+                    cantidadDisponibleAlojamiento = alo.getCapacidad();
+                    estadiaActual.setAlojamiento(alo);
+                    estadiaActual.setMonto(precioEstadia);
+                    paqueteActual.setEstadia(estadiaActual);
+                    pasaje.setTransporte(tipoTransporte);
 
                     modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
                     modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
@@ -488,27 +507,29 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     modelo.addRow(new Object[]{"Recargo por temporada (% del total)", cbx_temporada.getSelectedItem() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
                     precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
                     modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
-                    System.out.println(paqueteActual);
-                    paqueteEstaListo=true;
+                    paqueteActual.setPrecioTraslados(0.01);
+                    paqueteEstaListo = true;
                     break;
             }
         }
     }//GEN-LAST:event_cbx_tipoPaqueteActionPerformed
 
     private void btn_contratarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_contratarActionPerformed
-        if(paqueteEstaListo){
-            if((int)spn_cantAdultos.getValue()<0||(int)spn_cantAdultos.getValue()<0){
+        if (paqueteEstaListo) {
+            if ((int) spn_cantAdultos.getValue() < 0 || (int) spn_cantMenores.getValue() < 0) {
                 JOptionPane.showMessageDialog(rootPane, "Las cantidades de personas no pueden ser negativas");
-            } else if((int)spn_cantAdultos.getValue()+(int)spn_cantAdultos.getValue()==0){
+            } else if ((int) spn_cantAdultos.getValue() + (int) spn_cantMenores.getValue() == 0) {
                 JOptionPane.showMessageDialog(rootPane, "Se debe seleccionar una cantidad de personas");
-            } else if((int)spn_cantAdultos.getValue()+(int)spn_cantAdultos.getValue()>cantidadDisponibleAlojamiento){
-                JOptionPane.showMessageDialog(rootPane, "No hay disponibilidad para tantas personas (Máximo: "+cantidadDisponibleAlojamiento+")");
-            } else{
-                VistaCargaPersonas cargaPersonas = new VistaCargaPersonas(paqueteActual);
-                    cargaPersonas.setVisible(true);
-                    jDesktopPanel.add(cargaPersonas);
-                    cargaPersonas.show();
-                    this.toBack();
+            } else if ((int) spn_cantAdultos.getValue() + (int) spn_cantMenores.getValue() > cantidadDisponibleAlojamiento) {
+                JOptionPane.showMessageDialog(rootPane, "No hay disponibilidad para tantas personas (Máximo: " + cantidadDisponibleAlojamiento + ")");
+            } else {
+                VistaCargaPersonas cargaPersonas = new VistaCargaPersonas(paqueteActual, this);
+                cargaPersonas.setVisible(true);
+                jDesktopPanel.add(cargaPersonas);
+                cargaPersonas.show();
+                this.toBack();
+                cantAdultos = (int) spn_cantAdultos.getValue();
+                cantMenores = (int) spn_cantMenores.getValue();
             }
         }
     }//GEN-LAST:event_btn_contratarActionPerformed
@@ -750,7 +771,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         precioTraslado = paqueteActual.getPrecioTraslados() * precioSubtotal;
         precioPaquete = precioSubtotal + precioPension + recargoTemporada + precioTraslado;
         String tipoTransporte = paqueteActual.getBoleto().getTransporte();
-        cantidadDisponibleAlojamiento=paqueteActual.getEstadia().getAlojamiento().getCapacidad();
+        cantidadDisponibleAlojamiento = paqueteActual.getEstadia().getAlojamiento().getCapacidad();
 
         modelo.addRow(new Object[]{"Alojamiento (Capacidad)", paqueteActual.getEstadia().getAlojamiento().getTipo() + ": " + paqueteActual.getEstadia().getAlojamiento().getNombreAlojamiento() + " (" + cantidadDisponibleAlojamiento + ")", paqueteActual.getEstadia().getAlojamiento().getPrecioNoche() + " x " + diasEstadia() + " dias"});
         modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
@@ -759,7 +780,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         modelo.addRow(new Object[]{"Traslado(% del total)", traslado + " (" + valorTraslado * 100 + "%)", precioTraslado});
         modelo.addRow(new Object[]{"Recargo por temporada (% del total)", paqueteActual.getTemporada() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
         modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
-        paqueteEstaListo=true;
+        paqueteEstaListo = true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

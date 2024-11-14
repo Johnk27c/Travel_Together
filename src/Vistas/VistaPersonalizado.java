@@ -265,6 +265,8 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             System.out.println(alojamientoElegido);
             double precioNoche = alojamientoElegido.getPrecioNoche();
             Estadia nuevaEstadia = new Estadia();
+            nuevaEstadia.setFechaHoraCheckin(paqueteActual.getFechaIni().atStartOfDay());
+            nuevaEstadia.setFechaHoraCheckout(paqueteActual.getFechaFin().atStartOfDay());
             paqueteActual.setEstadia(nuevaEstadia);
             paqueteActual.getEstadia().setAlojamiento(alojamientoElegido);
            //Calculo de días para total de estadía

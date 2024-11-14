@@ -42,7 +42,7 @@ public class PaqueteData {
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             
-            ps.setString(1, paquete.getFechaFin().toString());
+            ps.setString(1, paquete.getFechaIni().toString());
             ps.setString(2, paquete.getFechaFin().toString());
             ps.setString(3, paquete.getFechaCompra().toString());            
             ps.setInt(4, paquete.getBoleto().getCodPasaje());

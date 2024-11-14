@@ -6,7 +6,10 @@ package Vistas;
 
 import Entidades.Paquete;
 import Entidades.Turista;
+import Persistencia.AlojamientoData;
+import Persistencia.EstadiaData;
 import Persistencia.PaqueteData;
+import Persistencia.PasajeData;
 import Persistencia.TuristaData;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -23,18 +26,23 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
 
     private TuristaData turistaD = new TuristaData();
     private PaqueteData paqueteD = new PaqueteData();
+    private PasajeData pasajeD = new PasajeData();
+    private EstadiaData estadiaD = new EstadiaData();
+    private AlojamientoData alojamientoD = new AlojamientoData();
     private Turista turistaActual = null;
     private Paquete paqueteActual;
     private HashSet<Turista> listaTuristas = new HashSet();
     private DefaultTableModel modelo = new DefaultTableModel();
+    private VistaContratarPaquete vista;
 
     /**
      * Creates new form VistaCargaPersonas
      */
-    public VistaCargaPersonas(Paquete paquete) {
+    public VistaCargaPersonas(Paquete paquete, VistaContratarPaquete vistaContratar) {
         initComponents();
         armarCabecera();
         paqueteActual = paquete;
+        this.vista = vistaContratar;
     }
 
     /**
@@ -242,15 +250,27 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
     private void jB_finalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_finalizarActionPerformed
         if (listaTuristas.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe agregar turistas para finalizar su compra");
-            return;
         }
+        double monto;
         for (Turista turista : listaTuristas) {
-            paqueteD.agregarTuristaAlPaquete(paqueteActual, turista);
+            if (turista.calcularEdad() < 10) {
+                monto = vista.precioPaquete - 0.5 * (vista.precioPension + vista.precioTransporte + vista.precioTraslado);
+            } else {
+                monto = vista.precioPaquete;
+            }
+            pasajeD.guardarPasaje(paqueteActual.getBoleto());
+            estadiaD.guardarEstadia(paqueteActual.getEstadia());
+            paqueteActual.setTurista(turista);
+            paqueteActual.setComprador(turista);
+            paqueteActual.setFechaCompra(LocalDate.now());
+            paqueteActual.setMontoFinal(monto);
+            paqueteD.guardarPaquete(paqueteActual);
         }
         JOptionPane.showMessageDialog(this, "Compra Confirmada! Solo pueden darse de baja 30 dias antes y modificaciones 10 dias antes de la fecha de inicio");
+        this.dispose();
+        System.out.println(paqueteActual);
         listaTuristas.clear();
         limpiarCampos();
-        paqueteD.guardarPaquete(paqueteActual);
     }//GEN-LAST:event_jB_finalizarActionPerformed
 
 

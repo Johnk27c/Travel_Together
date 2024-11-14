@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,6 +25,31 @@ public class PasajeData {
     
     public  PasajeData(){
         conexion = Conexion.getConexion();
+    }
+    
+    public void guardarPasaje(Pasaje pasaje) {
+        String sql = "INSERT INTO pasaje (fechaHora, idCiudad_Origen, idCiudad_Destino, transporte, precio )"
+                + "VALUES (? , ? , ? , ? , ?)";
+
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setTimestamp(1, Timestamp.valueOf(pasaje.getFechaHora()));
+            ps.setInt(2, pasaje.getCiudadOrigen().getCodCiudad());
+            ps.setInt(3, pasaje.getCiudadDestino().getCodCiudad());
+            ps.setString(4, pasaje.getTransporte());
+            ps.setDouble(5,pasaje.getPrecio());
+            
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next()){
+                pasaje.setCodPasaje(rs.getInt(1));
+            JOptionPane.showMessageDialog(null, "El pasaje ha sido cargada con exito");
+            }
+            ps.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Pasaje");
+        }
     }
     
     public Pasaje buscarPasaje(int codPasaje){
