@@ -49,6 +49,8 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     double precioPension;
     double precioTransporte;
     double precioTraslado;
+    int cantidadDisponibleAlojamiento;
+    boolean paqueteEstaListo;
 
     /**
      * Creates new form ContratarPaquete
@@ -112,8 +114,6 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         cbx_ciudadOrigen = new javax.swing.JComboBox<>();
         cbx_ciudadDestino = new javax.swing.JComboBox<>();
         jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -205,6 +205,11 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
 
         btn_contratar.setText("Contratar");
+        btn_contratar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_contratarActionPerformed(evt);
+            }
+        });
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -226,10 +231,6 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         });
 
         jLabel18.setText("IMPORTANTE: Una vez contratado el paquete, no se podrá modificar la fecha de viaje");
-
-        jLabel19.setText("TOTAL ADULTOS: ");
-
-        jLabel20.setText("TOTAL MENORES: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -300,11 +301,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                                                 .addGap(23, 23, 23)))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(spn_cantMenores, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                            .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(32, 32, 32)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                            .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,13 +362,11 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
-                            .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel19))
+                            .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
-                            .addComponent(spn_cantMenores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20))))
+                            .addComponent(spn_cantMenores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(btn_contratar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -456,6 +451,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     paqueteActual.getBoleto().setPrecio(precioTransporte);
                     precioPension = precioEstadia * pensionActual.getPorcentaje();
                     tipoTransporte = "Avión - CLASE MEDIA";
+                    cantidadDisponibleAlojamiento=alo.getCapacidad();
 
                     modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
                     modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
@@ -468,7 +464,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     modelo.addRow(new Object[]{"Recargo por temporada", cbx_temporada.getSelectedItem() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
                     precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
                     modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
-                    System.out.println(paqueteActual);
+                    paqueteEstaListo=true;
                     break;
                 default:
                     alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Minimo");
@@ -479,6 +475,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     paqueteActual.getBoleto().setPrecio(precioTransporte);
                     precioPension = precioEstadia * pensionActual.getPorcentaje();
                     tipoTransporte = "Colectivo - SEMICAMA";
+                    cantidadDisponibleAlojamiento=alo.getCapacidad();
 
                     modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
                     modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
@@ -492,10 +489,25 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
                     modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
                     System.out.println(paqueteActual);
+                    paqueteEstaListo=true;
                     break;
             }
         }
     }//GEN-LAST:event_cbx_tipoPaqueteActionPerformed
+
+    private void btn_contratarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_contratarActionPerformed
+        if(paqueteEstaListo){
+            if((int)spn_cantAdultos.getValue()<0||(int)spn_cantAdultos.getValue()<0){
+                JOptionPane.showMessageDialog(rootPane, "Las cantidades de personas no pueden ser negativas");
+            } else if((int)spn_cantAdultos.getValue()+(int)spn_cantAdultos.getValue()==0){
+                JOptionPane.showMessageDialog(rootPane, "Se debe seleccionar una cantidad de personas");
+            } else if((int)spn_cantAdultos.getValue()+(int)spn_cantAdultos.getValue()>cantidadDisponibleAlojamiento){
+                JOptionPane.showMessageDialog(rootPane, "No hay disponibilidad para tantas personas (Máximo: "+cantidadDisponibleAlojamiento+")");
+            } else{
+                
+            }
+        }
+    }//GEN-LAST:event_btn_contratarActionPerformed
 
     private void cargarCbx(HashSet lista, JComboBox comboBox) {
         comboBox.removeAllItems();
@@ -734,14 +746,16 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         precioTraslado = paqueteActual.getPrecioTraslados() * precioSubtotal;
         precioPaquete = precioSubtotal + precioPension + recargoTemporada + precioTraslado;
         String tipoTransporte = paqueteActual.getBoleto().getTransporte();
+        cantidadDisponibleAlojamiento=paqueteActual.getEstadia().getAlojamiento().getCapacidad();
 
-        modelo.addRow(new Object[]{"Alojamiento (Capacidad)", paqueteActual.getEstadia().getAlojamiento().getTipo() + ": " + paqueteActual.getEstadia().getAlojamiento().getNombreAlojamiento() + " (" + paqueteActual.getEstadia().getAlojamiento().getCapacidad() + ")", paqueteActual.getEstadia().getAlojamiento().getPrecioNoche() + " x " + diasEstadia() + " dias"});
+        modelo.addRow(new Object[]{"Alojamiento (Capacidad)", paqueteActual.getEstadia().getAlojamiento().getTipo() + ": " + paqueteActual.getEstadia().getAlojamiento().getNombreAlojamiento() + " (" + cantidadDisponibleAlojamiento + ")", paqueteActual.getEstadia().getAlojamiento().getPrecioNoche() + " x " + diasEstadia() + " dias"});
         modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
         modelo.addRow(new Object[]{"Transporte", tipoTransporte, precioTransporte});
         modelo.addRow(new Object[]{"Pensión (% de la estadia)", paqueteActual.getRegimen().getNombre() + " (" + 100 * paqueteActual.getRegimen().getPorcentaje() + "%)", precioPension});
         modelo.addRow(new Object[]{"Traslado(% del total)", traslado + " (" + valorTraslado * 100 + "%)", precioTraslado});
         modelo.addRow(new Object[]{"Recargo por temporada (% del total)", paqueteActual.getTemporada() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
         modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
+        paqueteEstaListo=true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -762,9 +776,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
