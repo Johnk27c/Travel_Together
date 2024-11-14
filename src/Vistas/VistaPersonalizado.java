@@ -5,8 +5,10 @@
 package Vistas;
 
 import Entidades.Alojamiento;
+import Entidades.Ciudad;
 import Entidades.Paquete;
 import Entidades.Pension;
+import Persistencia.AlojamientoData;
 import Persistencia.PensionData;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,20 +27,27 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
     private PensionData accesoPension = new PensionData();
     private DefaultTableModel modelo = new DefaultTableModel();
     private Paquete paqueteActual;
-    private String origen;
+    private String origenActual;
+    private VistaContratarPaquete vistaContratar;
+    private VistaConsultaCliente vistaConsulta;
+    private AlojamientoData accesoAlojamiento = new AlojamientoData();
 
     /**
      * Creates new form VistaPersonalizado
      */
-    public VistaPersonalizado(Paquete paquete, String origen) {
+    public VistaPersonalizado(Paquete paquete, String origenVista, VistaContratarPaquete vistaContratar, VistaConsultaCliente vistaConsulta) {
         initComponents();
         this.paqueteActual = paquete;
-        this.origen = origen;
+        this.origenActual = origenVista;
         modelo = new DefaultTableModel();
         cargarCbxAlojamientos();// carga los tipos de alojamientos
         cargarCbxPension();// carga las pensiones
         cargarCbxTransporte();// carga los transportes
         armarCabecera();
+        jCbx_alojamientos.setSelectedIndex(-1);
+        this.vistaContratar = vistaContratar;
+        this.vistaConsulta = vistaConsulta;
+        cargarAlojamientosDestino();
     }
 
     /**
@@ -63,7 +72,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         jRbt_no = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         jCbx_transporte = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btn_confirmar = new javax.swing.JButton();
 
         jLabel1.setText("Tipo de alojamiento:");
 
@@ -108,10 +117,10 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Transporte:");
 
-        jButton1.setText("Confirmar preferencias");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_confirmar.setText("Confirmar preferencias");
+        btn_confirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_confirmarActionPerformed(evt);
             }
         });
 
@@ -156,7 +165,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
                 .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(168, 168, 168))
         );
         jPanel1Layout.setVerticalGroup(
@@ -184,7 +193,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
                     .addComponent(jLabel5)
                     .addComponent(jCbx_transporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
 
@@ -212,16 +221,23 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         jRbt_si.setSelected(false);
     }//GEN-LAST:event_jRbt_noActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btn_confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarActionPerformed
+        System.out.println(opcionesSeleccionadasOK());
+    }//GEN-LAST:event_btn_confirmarActionPerformed
 
     private void jCbx_alojamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCbx_alojamientosActionPerformed
-        System.out.println(paqueteActual.getFechaIni());
+        if (jCbx_alojamientos.getSelectedItem() != null) {
+            borrarfilaTabla();
+            ArrayList<Alojamiento> lista = filtrarAlojamientosPorTipo((String) jCbx_alojamientos.getSelectedItem());
+            for (Alojamiento alojamiento : lista) {
+                modelo.addRow(new Object[]{alojamiento.getCodAlojam(), alojamiento.getNombreAlojamiento(), alojamiento.getDireccion(), alojamiento.getCapacidad(), alojamiento.getHabitaciones(), alojamiento.getBanios(), alojamiento.getPrecioNoche()});
+            }
+        }
     }//GEN-LAST:event_jCbx_alojamientosActionPerformed
 
     private void armarCabecera() {
         ArrayList<Object> filaCabecera = new ArrayList<>();
+        filaCabecera.add("Cod. Alojamiento");
         filaCabecera.add("Nombre");
         filaCabecera.add("Dirección");
         filaCabecera.add("Capacidad");
@@ -267,8 +283,31 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
     }
 
+    public void cargarAlojamientosDestino() {
+        Ciudad origen = paqueteActual.getBoleto().getCiudadDestino();
+        this.alojamientos = accesoAlojamiento.buscarAlojamientPorCiudad(origen.getCodCiudad());
+        for (Alojamiento alojamiento : alojamientos) {
+            modelo.addRow(new Object[]{alojamiento.getCodAlojam(), alojamiento.getNombreAlojamiento(), alojamiento.getDireccion(), alojamiento.getCapacidad(), alojamiento.getHabitaciones(), alojamiento.getBanios(), alojamiento.getPrecioNoche()});
+        }
+    }
+
+    public ArrayList<Alojamiento> filtrarAlojamientosPorTipo(String tipo) {
+        ArrayList<Alojamiento> listaNueva = new ArrayList();
+        if (jCbx_alojamientos.getSelectedItem() != null) {
+            for (Alojamiento alojamiento : alojamientos) {
+                if (alojamiento.getTipo().equals(tipo)) {
+                    listaNueva.add(alojamiento);
+                }
+            }
+        }
+        return listaNueva;
+    }
+
+    private boolean opcionesSeleccionadasOK() {
+        return jTable_alojamientos.getSelectedRow() != -1 && jCbx_pension.getSelectedItem() != null && (jRbt_si.isSelected() || jRbt_no.isSelected() && jCbx_transporte.getSelectedItem() != null);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_confirmar;
     private javax.swing.JComboBox<String> jCbx_alojamientos;
     private javax.swing.JComboBox<Pension> jCbx_pension;
     private javax.swing.JComboBox<String> jCbx_transporte;
