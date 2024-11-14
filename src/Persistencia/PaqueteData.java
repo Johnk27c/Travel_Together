@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
@@ -21,6 +22,9 @@ public class PaqueteData {
     private Connection conexion = null;
     private TuristaData accesoTurista = new TuristaData();
     private PasajeData accesoPasaje = new PasajeData();
+    private PensionData accesoPension = new PensionData();
+    private EstadiaData accesoEstadia = new EstadiaData();
+    
     
     
     public PaqueteData() {
@@ -29,7 +33,7 @@ public class PaqueteData {
 
     public void guardarPaquete(Paquete paquete) {
 
-        String sql = "INSERT INTO paquete (fechaIni, fechaFin, fechaCompra, boleto, temporada, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslados, tipo) "
+        String sql = "INSERT INTO paquete (fechaIni, fechaFin, fechaCompra, boleto, temporada, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslado, tipo) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
         try {
@@ -59,7 +63,7 @@ public class PaqueteData {
     
     public void modificarPaquete(Paquete paquete) {    
 
-        String sql = "UPDATE paquete SET boleto = ?, estadia = ?, regimen = ?, montofinal = ?, precioTraslados = ? "
+        String sql = "UPDATE paquete SET boleto = ?, estadia = ?, regimen = ?, montofinal = ?, precioTraslado = ? "
                 + "WHERE codPaquete = ?";
 
         try {
@@ -103,24 +107,37 @@ public class PaqueteData {
         }
     }
     
-    public void buscarPaquete(int codPaquete){
-        String sql = "SELECT codPaquete, fechaIni, fechaFin, fechaCompra, boleto, temporada, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslados, tipo "
+    public Paquete buscarPaquete(int codPaquete){
+        String sql = "SELECT codPaquete, fechaIni, fechaFin, fechaCompra, boleto, temporada, estadia, regimen, dniTurista, dniComprador, montofinal, precioTraslado, tipo "
                 + "FROM paquete WHERE codPaquete = ?";
-        Paquete paquete = null;
-        
+       
+        Paquete paquete = new Paquete();
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
-            ps.setInt(1, codPaquete);
+            ps.setInt(1, codPaquete);           
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                paquete = new Paquete();
+                
                 paquete.setCodPaquete(rs.getInt("codPaquete"));
+                paquete.setFechaIni(rs.getDate("fechaIni").toLocalDate());
+                paquete.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+                paquete.setFechaCompra(rs.getDate("fechaCompra").toLocalDate());
+                paquete.setBoleto(accesoPasaje.buscarPasaje(rs.getInt("boleto")));
+                paquete.setTemporada(rs.getString("temporada"));
+                paquete.setEstadia(accesoEstadia.buscarEstadiaPorCodigo(rs.getInt("estadia")));
+                paquete.setRegimen(accesoPension.buscarPorCodigo(rs.getInt("regimen")));
+                paquete.setTurista(accesoTurista.buscarTuristaPorDNI(rs.getInt("dniTurista")));
+                paquete.setComprador(accesoTurista.buscarTuristaPorDNI(rs.getInt("dniComprador")));
+                paquete.setMontoFinal(rs.getDouble("montoFinal"));
+                paquete.setPrecioTraslados(rs.getDouble("precioTraslado"));
+                paquete.setTipo(rs.getString("tipo"));
                 
                 
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a tabla paquete");
         }
+        return paquete;
     }
     
     public ArrayList<Paquete> buscarCompradorDni(int dniComprador){

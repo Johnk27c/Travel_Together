@@ -14,6 +14,11 @@ import Entidades.Turista;
 import Persistencia.PaqueteData;
 import java.util.EventListener;
 import java.sql.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Vistas.VistaPersonalizado;
+import java.time.LocalDate;
+import javax.swing.JDesktopPane;
 
 import javax.swing.JOptionPane;
 
@@ -25,16 +30,20 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
     
     private PaqueteData accesoPaquete;
     private DefaultTableModel model = new DefaultTableModel();
-    
-    
+    private ArrayList<Integer> codigosPaquetes = new ArrayList<>();
+    private JDesktopPane desktop;
+    private Paquete paqueteActual;
     
     /**
      * Creates new form VistaConsultaCliente
      */
-    public VistaConsultaCliente() {
+    public VistaConsultaCliente(JDesktopPane desktop) {
+        this.desktop = desktop;
         accesoPaquete = new PaqueteData();
         initComponents();
         armarCabeceraTabla();
+        configDarDeBaja();
+        
         
             
     }
@@ -114,28 +123,26 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(36, Short.MAX_VALUE)
+                .addGap(92, 92, 92)
+                .addComponent(jB_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jB_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_darDeBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(80, 80, 80))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jB_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jB_Confirmar, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                            .addComponent(jB_darDeBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(42, 42, 42))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(63, 63, 63)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jT_dniComprador, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jB_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(8, 8, 8)))
-                        .addGap(25, 25, 25))))
+                        .addComponent(jT_dniComprador, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(112, 112, 112))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(66, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(51, 51, 51))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,28 +150,83 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                    .addComponent(jT_dniComprador))
+                    .addComponent(jT_dniComprador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jB_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jB_Modificar, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(jB_darDeBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(47, 47, 47)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jB_darDeBaja, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
                 .addComponent(jB_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46))
+                .addGap(55, 55, 55))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jB_ConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ConfirmarActionPerformed
-        // TODO add your handling code here:
+        
+        for (Integer codigo : codigosPaquetes) {
+            Paquete paquete = accesoPaquete.buscarPaquete(codigo);
+            paquete.setBoleto(paqueteActual.getBoleto());
+            paquete.setEstadia(paqueteActual.getEstadia());
+            paquete.setRegimen(paqueteActual.getRegimen());
+            paquete.setMontoFinal(paqueteActual.getMontoFinal());
+            paquete.setPrecioTraslados(paqueteActual.getPrecioTraslados());
+            
+            accesoPaquete.modificarPaquete(paquete);
+            
+        }
+        
+        try{
+        if(!jT_dniComprador.getText().equals("")){
+            int dni = Integer.valueOf(jT_dniComprador.getText());
+            ArrayList<Paquete> lista = accesoPaquete.buscarCompradorDni(dni);
+            borrarfilaTabla();
+            
+            for (Paquete paquete : lista) {                
+                model.addRow(new Object[] {paquete.getCodPaquete(), paquete.getTurista().getDni(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getTipo(), paquete.getBoleto().getCiudadDestino().getNombre(), paquete.getFechaCompra()});
+            }
+        }
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Solo debe ingresar números.");
+        }
+        
     }//GEN-LAST:event_jB_ConfirmarActionPerformed
 
     private void jB_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ModificarActionPerformed
+//        JOptionPane.showConfirmDialog(rootPane, "")
+        
+       if(jTable1.getSelectedRow()!= -1){
+           
+           LocalDate fecha = (LocalDate) model.getValueAt(jTable1.getSelectedRow(), 5);
+           ArrayList<Integer> listaCodigos = new ArrayList();
+           int filasTotales = jTable1.getRowCount();
+           for (int i = 0; i < filasTotales; i++) {
+            LocalDate fechaFila = (LocalDate) model.getValueAt(i, 5);
+               System.out.println(fechaFila);
+               System.out.println(fecha);
+            if(fechaFila.equals(fecha)){
+                listaCodigos.add((int) model.getValueAt(i, 0));
+            }
+
+               
+          
+           }
+           
+           codigosPaquetes  = listaCodigos;
+           paqueteActual = accesoPaquete.buscarPaquete(codigosPaquetes.get(0));
+           VistaPersonalizado vista = new VistaPersonalizado(paqueteActual , "Consulta", null, this);
+           vista.setVisible(true);
+           desktop.add(vista);
+           vista.show();
+           this.toBack();
+       }else{
+           JOptionPane.showMessageDialog(rootPane, "Seleccione un paquete.");
+       }
         
     }//GEN-LAST:event_jB_ModificarActionPerformed
 
@@ -182,7 +244,7 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
             borrarfilaTabla();
             
             for (Paquete paquete : lista) {                
-                model.addRow(new Object[] {paquete.getCodPaquete(), paquete.getTurista().getDni(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getTipo(), paquete.getBoleto().getCiudadDestino().getNombre()});
+                model.addRow(new Object[] {paquete.getCodPaquete(), paquete.getTurista().getDni(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getTipo(), paquete.getBoleto().getCiudadDestino().getNombre(), paquete.getFechaCompra()});
             }
         }
         }catch (NumberFormatException e){
@@ -214,12 +276,19 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
         filaCabecera.add("Nombre");
         filaCabecera.add("Tipo");
         filaCabecera.add("Destino");
+        filaCabecera.add("fechaCompra");
+        
         for(Object it: filaCabecera){
             model.addColumn(it);
         }
         jTable1.setModel(model);
     }
     
+   
+    
+    public void configDarDeBaja(){
+        jB_darDeBaja.addActionListener(e -> accesoPaquete.eliminarPaquete(WIDTH));
+    }
     
     
     

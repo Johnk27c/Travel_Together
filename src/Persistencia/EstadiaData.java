@@ -23,7 +23,7 @@ public class EstadiaData {
 
     public void guardarEstadia(Estadia estadia) {
 
-        String sql = "INSERT INTO estadia (fechaHoraCheckin, fechaHoraCheckout, monto, idAlojamiento, vigencia) "
+        String sql = "INSERT INTO estadia (fechaHoraChekin, fechaHoraCheckout, monto, idAlojamiento, vigencia) "
                 + "VALUES(?, ?, ?, ?, ?)";
 
         try {
@@ -84,7 +84,7 @@ public class EstadiaData {
     }
 
     public Estadia buscarEstadiaPorCodigo(int codEstadia) {
-        String sql = "SELECT fechaHoraCheckin, fechaHoraCheckout, monto, idAlojamiento, vigencia FROM estadia "
+        String sql = "SELECT fechaHoraChekin, fechaHoraCheckout, monto, idAlojamiento, vigencia FROM estadia "
                 + "WHERE codEstadia = ? AND vigencia = 1";
 
         Estadia estadia = null;
@@ -96,7 +96,7 @@ public class EstadiaData {
             if (rs.next()) {
                 estadia = new Estadia();
                 estadia.setCodEstadia(codEstadia);
-                estadia.setFechaHoraCheckin(rs.getTimestamp("fechaHoraCheckin").toLocalDateTime());
+                estadia.setFechaHoraCheckin(rs.getTimestamp("fechaHoraChekin").toLocalDateTime());
                 estadia.setFechaHoraCheckout(rs.getTimestamp("fechaHoraCheckout").toLocalDateTime());
                 estadia.setMonto(rs.getDouble("monto"));
                 //estadia.setAlojamiento(); //Debe buscar un alojamiento por el código del alojamiento obtenido del ResultSet

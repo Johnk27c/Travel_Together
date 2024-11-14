@@ -75,6 +75,8 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         jCbx_transporte = new javax.swing.JComboBox<>();
         btn_confirmar = new javax.swing.JButton();
 
+        setClosable(true);
+
         jLabel1.setText("Tipo de alojamiento:");
 
         jCbx_alojamientos.addActionListener(new java.awt.event.ActionListener() {
