@@ -1,30 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
+
 package Vistas;
 
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import Entidades.Paquete;
-import Entidades.Turista;
 import Persistencia.PaqueteData;
-import java.util.EventListener;
-import java.sql.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import Vistas.VistaPersonalizado;
-import java.awt.Component;
 import java.time.LocalDate;
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import static sun.jvm.hotspot.HelloWorld.e;
 
 /**
  *

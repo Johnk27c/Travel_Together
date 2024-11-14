@@ -1,8 +1,5 @@
 package Vistas;
 
-import Entidades.Turista;
-import Persistencia.TuristaData;
-
 /**
  *
  * @author Gabriel Jara
