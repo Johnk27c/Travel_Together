@@ -274,7 +274,12 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Debe seleccionar todas las opciones");
         }
+        if(origenActual=="Contratar"){
         vistaContratar.cargarDatosPaqueteActual();
+            
+        } else{
+            ;
+        }
         this.dispose();
     }//GEN-LAST:event_btn_confirmarActionPerformed
 
