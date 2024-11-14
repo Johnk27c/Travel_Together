@@ -95,30 +95,52 @@ public class AlojamientoData {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla alojamiento de la base de datos.");
         }
     }
-    
-    
-    
+
+    public Alojamiento buscarAlojamientoPorId(int cod) {
+        String sql = "SELECT codAlojamiento,nombreAlojamiento, tipo, direccion, capacidad, habitaciones, banios, precio FROM alojamiento "
+                + "WHERE codAlojamiento = ? ";
+        Alojamiento alojamiento = new Alojamiento();
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ps.setInt(1, cod);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                alojamiento.setCodAlojam(rs.getInt("codAlojamiento"));
+                alojamiento.setNombreAlojamiento(rs.getString("nombreAlojamiento"));
+                alojamiento.setDireccion(rs.getString("direccion"));
+                alojamiento.setTipo(rs.getString("tipo"));
+                alojamiento.setCapacidad(rs.getInt("capacidad"));
+                alojamiento.setHabitaciones(rs.getInt("habitaciones"));
+                alojamiento.setBanios(rs.getInt("banios"));
+                alojamiento.setPrecioNoche(rs.getDouble("precio"));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Alojamiento");
+        }
+        return alojamiento;
+    }
+
     public HashSet<Integer> mostrarCiudades() {
 
         String sql = "SELECT codCiudad FROM alojamiento ";
-        
-        HashSet<Integer>ciudades= new HashSet <>();
-        
+
+        HashSet<Integer> ciudades = new HashSet<>();
+
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
-            
-            ResultSet res= ps.executeQuery();
+
+            ResultSet res = ps.executeQuery();
             while (res.next()) {
                 ciudades.add(res.getInt("codCiudad"));
             }
             ps.close();
-            
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla alojamiento de la base de datos.");
         }
         return ciudades;
     }
-    
+
     public ArrayList<Alojamiento> buscarAlojamientPorCiudad(int codCiudad) {
         String sql = "SELECT codAlojamiento,nombreAlojamiento, tipo, direccion, capacidad, habitaciones, banios, precio FROM alojamiento "
                 + "WHERE codCiudad = ? ";
@@ -128,14 +150,14 @@ public class AlojamientoData {
             ps.setInt(1, codCiudad);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Alojamiento alojamiento= new Alojamiento(); 
-                alojamiento.setCodAlojam(rs.getInt("codAlojamiento")); 
-                alojamiento.setNombreAlojamiento(rs.getString("nombreAlojamiento")); 
+                Alojamiento alojamiento = new Alojamiento();
+                alojamiento.setCodAlojam(rs.getInt("codAlojamiento"));
+                alojamiento.setNombreAlojamiento(rs.getString("nombreAlojamiento"));
                 alojamiento.setDireccion(rs.getString("direccion"));
                 alojamiento.setTipo(rs.getString("tipo"));
-                alojamiento.setCapacidad(rs.getInt("capacidad")); 
-                alojamiento.setHabitaciones(rs.getInt("habitaciones")); 
-                alojamiento.setBanios(rs.getInt("banios")); 
+                alojamiento.setCapacidad(rs.getInt("capacidad"));
+                alojamiento.setHabitaciones(rs.getInt("habitaciones"));
+                alojamiento.setBanios(rs.getInt("banios"));
                 alojamiento.setPrecioNoche(rs.getDouble("precio"));
                 alojamientos.add(alojamiento);
             }

@@ -45,6 +45,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private Estadia estadiaActual;
     private Pasaje pasaje;
     private JDesktopPane jDesktopPanel;
+    double precioPaquete;
+    double precioPension;
+    double precioTransporte;
+    double precioTraslado;
 
     /**
      * Creates new form ContratarPaquete
@@ -276,45 +280,43 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(18, 18, 18)
+                                .addGap(34, 34, 34)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel10)
-                                        .addGap(29, 29, 29))
+                                    .addComponent(jLabel15)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addGap(23, 23, 23)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(spn_cantMenores, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                    .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(32, 32, 32)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addContainerGap(232, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1)
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel9)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel10)
+                                                .addGap(29, 29, 29))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel11)
+                                                .addGap(23, 23, 23)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(spn_cantMenores, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                            .addComponent(spn_cantAdultos, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(32, 32, 32)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(78, 78, 78)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel14)
                                     .addComponent(jLabel13)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel12)
                                         .addGap(37, 37, 37)
-                                        .addComponent(cbx_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap())))
+                                        .addComponent(cbx_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 606, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,17 +353,15 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     .addComponent(cbx_tipoPaquete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(46, 46, 46))
+                    .addComponent(jLabel9)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel10)
@@ -426,18 +426,20 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         if (cbx_tipoPaquete.getSelectedItem() != null) {
             spn_cantAdultos.setEnabled(true);
             spn_cantMenores.setEnabled(true);
-            long difDiasMilSeg = date_fechaFin.getDate().getTime() - date_fechaInicio.getDate().getTime();
-            long difDias = TimeUnit.DAYS.convert(difDiasMilSeg, TimeUnit.MILLISECONDS);
-            System.out.println(difDias);
+            double precioEstadia;
+            double recargoTemporada;
+            double precioSubtotal;
+            String tipoTransporte;
+            paqueteActual.setFechaIni(pasarALocalDate(date_fechaInicio.getDate()));
+            paqueteActual.setFechaFin(pasarALocalDate(date_fechaFin.getDate()));
+            pasaje = new Pasaje(pasarALocalDate(date_fechaInicio.getDate()).atStartOfDay(), (Ciudad) cbx_ciudadOrigen.getSelectedItem(), (Ciudad) cbx_ciudadDestino.getSelectedItem());
+            paqueteActual.setBoleto(pasaje);
+            paqueteActual.setTemporada((String) cbx_temporada.getSelectedItem());
+
             switch (cbx_tipoPaquete.getSelectedItem().toString()) {
                 case "Personalizado":
-                    paqueteActual.setFechaIni(pasarALocalDate(date_fechaInicio.getDate()));
-                    paqueteActual.setFechaFin(pasarALocalDate(date_fechaFin.getDate()));
-                    pasaje = new Pasaje(pasarALocalDate(date_fechaInicio.getDate()).atStartOfDay(), (Ciudad) cbx_ciudadOrigen.getSelectedItem(), (Ciudad) cbx_ciudadDestino.getSelectedItem(), 5, 345435);
-                    paqueteActual.setBoleto(pasaje);
-                    paqueteActual.setTemporada((String) cbx_temporada.getSelectedItem());
                     paqueteActual.setTipo("Personalizado");
-                    VistaPersonalizado vista = new VistaPersonalizado(paqueteActual, "Contratar",this,null);
+                    VistaPersonalizado vista = new VistaPersonalizado(paqueteActual, "Contratar", this, null);
                     vista.setVisible(true);
                     jDesktopPanel.add(vista);
                     vista.show();
@@ -449,23 +451,47 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     Alojamiento alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Maximo");
                     pensionActual = accesoPension.buscarPorCodigo(2);
                     borrarfilaTabla();
-                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche()});
-                    modelo.addRow(new Object[]{"Pensión (% del total)", pensionActual.getNombre(), pensionActual.getPorcentaje()});
-                    modelo.addRow(new Object[]{"Transporte", "Avión - CLASE MEDIA", 90000});
-                    modelo.addRow(new Object[]{"Traslado(% del total)", "Sí", 0.01});
-                    modelo.addRow(new Object[]{"Valor por persona", "", 000});
-                    System.out.println(alo);
+                    precioEstadia = alo.getPrecioNoche() * diasEstadia();
+                    precioTransporte = 100000;
+                    paqueteActual.getBoleto().setPrecio(precioTransporte);
+                    precioPension = precioEstadia * pensionActual.getPorcentaje();
+                    tipoTransporte = "Avión - CLASE MEDIA";
+
+                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
+                    modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
+                    modelo.addRow(new Object[]{"Transporte", tipoTransporte, precioTransporte});
+                    precioSubtotal = precioEstadia + precioTransporte;
+                    precioTraslado = precioSubtotal * 0.01;
+                    recargoTemporada = precioSubtotal * recargoPorTemporada() / 100;
+                    modelo.addRow(new Object[]{"Pensión (% de la estadia)", pensionActual.getNombre() + " (" + 100 * pensionActual.getPorcentaje() + "%)", precioPension});
+                    modelo.addRow(new Object[]{"Traslado(% del total)", "Incluido (" + 0.01 * 100 + ")%", precioTraslado});
+                    modelo.addRow(new Object[]{"Recargo por temporada", cbx_temporada.getSelectedItem() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
+                    precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
+                    modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
+                    System.out.println(paqueteActual);
                     break;
                 default:
                     alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Minimo");
                     pensionActual = accesoPension.buscarPorCodigo(1);
                     borrarfilaTabla();
-                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche()});
-                    modelo.addRow(new Object[]{"Pensión (% del total)", pensionActual.getNombre(), pensionActual.getPorcentaje()});
-                    modelo.addRow(new Object[]{"Transporte", "Colectivo - SEMICAMA", 35000});
-                    modelo.addRow(new Object[]{"Traslado(% del total)", "Sí", 0.01});
-                    modelo.addRow(new Object[]{"Valor por persona", "", 000});
-                    System.out.println(alo);
+                    precioEstadia = alo.getPrecioNoche() * diasEstadia();
+                    precioTransporte = 35000;
+                    paqueteActual.getBoleto().setPrecio(precioTransporte);
+                    precioPension = precioEstadia * pensionActual.getPorcentaje();
+                    tipoTransporte = "Colectivo - SEMICAMA";
+
+                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche() + " x " + diasEstadia() + " dias"});
+                    modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
+                    modelo.addRow(new Object[]{"Transporte", tipoTransporte, precioTransporte});
+                    precioSubtotal = precioEstadia + precioTransporte;
+                    precioTraslado = precioSubtotal * 0.01;
+                    recargoTemporada = precioSubtotal * recargoPorTemporada() / 100;
+                    modelo.addRow(new Object[]{"Pensión (% de la estadia)", pensionActual.getNombre() + " (" + 100 * pensionActual.getPorcentaje() + "%)", precioPension});
+                    modelo.addRow(new Object[]{"Traslado(% del total)", "Incluido (" + 0.01 * 100 + ")%", precioTraslado});
+                    modelo.addRow(new Object[]{"Recargo por temporada (% del total)", cbx_temporada.getSelectedItem() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
+                    precioPaquete = precioSubtotal + precioPension + precioTraslado + recargoTemporada;
+                    modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
+                    System.out.println(paqueteActual);
                     break;
             }
         }
@@ -664,8 +690,58 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
     }
 
+    private long diasEstadia() {
+        long difDias = 0;
+        if (date_fechaFin.getDate() != null && date_fechaInicio.getDate() != null) {
+            long difDiasMilSeg = date_fechaFin.getDate().getTime() - date_fechaInicio.getDate().getTime();
+            difDias = TimeUnit.DAYS.convert(difDiasMilSeg, TimeUnit.MILLISECONDS);
+            System.out.println(difDias);
+        }
+        return difDias;
+    }
+
+    private int recargoPorTemporada() {
+        int recargo = 0;
+        if (cbx_temporada.getSelectedItem() != null) {
+            switch ((String) cbx_temporada.getSelectedItem()) {
+                case "Alta":
+                    recargo = 30;
+                    break;
+                case "Media":
+                    recargo = 15;
+                    break;
+                default:
+                    recargo = 0;
+                    break;
+            }
+        }
+        return recargo;
+    }
+
     public void cargarDatosPaqueteActual() {
-        
+        String traslado;
+        double valorTraslado = paqueteActual.getPrecioTraslados();
+        if (valorTraslado > 0) {
+            traslado = "Incluido";
+        } else {
+            traslado = "Sin traslado";
+        }
+        double precioEstadia = paqueteActual.getEstadia().getAlojamiento().getPrecioNoche() * diasEstadia();
+        precioTransporte = paqueteActual.getBoleto().getPrecio();
+        precioPension = paqueteActual.getRegimen().getPorcentaje() * precioEstadia;
+        double precioSubtotal = precioEstadia + precioTransporte;
+        double recargoTemporada = precioSubtotal * recargoPorTemporada() / 100;
+        precioTraslado = paqueteActual.getPrecioTraslados() * precioSubtotal;
+        precioPaquete = precioSubtotal + precioPension + recargoTemporada + precioTraslado;
+        String tipoTransporte = paqueteActual.getBoleto().getTransporte();
+
+        modelo.addRow(new Object[]{"Alojamiento (Capacidad)", paqueteActual.getEstadia().getAlojamiento().getTipo() + ": " + paqueteActual.getEstadia().getAlojamiento().getNombreAlojamiento() + " (" + paqueteActual.getEstadia().getAlojamiento().getCapacidad() + ")", paqueteActual.getEstadia().getAlojamiento().getPrecioNoche() + " x " + diasEstadia() + " dias"});
+        modelo.addRow(new Object[]{"Total por Alojamiento", "", precioEstadia});
+        modelo.addRow(new Object[]{"Transporte", tipoTransporte, precioTransporte});
+        modelo.addRow(new Object[]{"Pensión (% de la estadia)", paqueteActual.getRegimen().getNombre() + " (" + 100 * paqueteActual.getRegimen().getPorcentaje() + "%)", precioPension});
+        modelo.addRow(new Object[]{"Traslado(% del total)", traslado + " (" + valorTraslado * 100 + "%)", precioTraslado});
+        modelo.addRow(new Object[]{"Recargo por temporada (% del total)", paqueteActual.getTemporada() + " (" + recargoPorTemporada() + "%)", recargoTemporada});
+        modelo.addRow(new Object[]{"VALOR POR PERSONA", "", precioPaquete});
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -45,7 +45,7 @@ public class Pension {
 
     @Override
     public String toString() {
-        return nombre + " (con un porcentaje adicional del  " + porcentaje + ")";
+        return nombre + " (con un porcentaje adicional del  " + porcentaje*100 + "%)";
     }
     
     

@@ -6,12 +6,18 @@ package Vistas;
 
 import Entidades.Alojamiento;
 import Entidades.Ciudad;
+import Entidades.Estadia;
 import Entidades.Paquete;
 import Entidades.Pension;
 import Persistencia.AlojamientoData;
 import Persistencia.PensionData;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Jon_kevin27
  */
 public class VistaPersonalizado extends javax.swing.JInternalFrame {
-    
+
     ArrayList<Alojamiento> alojamientos = new ArrayList();
     ArrayList<String> pensiones = new ArrayList();
     private HashSet<Pension> listarPensiones = new HashSet();
@@ -46,6 +52,8 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         cargarCbxTransporte();// carga los transportes
         armarCabecera();
         jCbx_alojamientos.setSelectedIndex(-1);
+        jCbx_transporte.setSelectedIndex(-1);
+        jCbx_pension.setSelectedIndex(-1);
         this.vistaContratar = vistaContratar;
         this.vistaConsulta = vistaConsulta;
         cargarAlojamientosDestino();
@@ -226,6 +234,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
 
     private void btn_confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarActionPerformed
         if (opcionesSeleccionadasOK()) {
+            //Setea transporte y precio de boleto
             paqueteActual.getBoleto().setTransporte((String) jCbx_transporte.getSelectedItem());
             switch ((String) jCbx_transporte.getSelectedItem()) {
                 case "Avión - PRIMERA  CLASE":
@@ -241,10 +250,32 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
                     paqueteActual.getBoleto().setPrecio(35000);
                     break;
             }
+            //Setea pension
             paqueteActual.setRegimen((Pension) jCbx_pension.getSelectedItem());
+            //Setea traslados
+            if (jRbt_si.isSelected()) {
+                paqueteActual.setPrecioTraslados(0.01);
+            } else {
+                paqueteActual.setPrecioTraslados(0);
+            }
+            //Setea Estadia
+            int codAlojamiento = (int) modelo.getValueAt(jTable_alojamientos.getSelectedRow(), 0);
+            System.out.println("Codigo alojamiento "+codAlojamiento);
+            Alojamiento alojamientoElegido = accesoAlojamiento.buscarAlojamientoPorId(codAlojamiento);
+            System.out.println(alojamientoElegido);
+            double precioNoche = alojamientoElegido.getPrecioNoche();
+            Estadia nuevaEstadia = new Estadia();
+            paqueteActual.setEstadia(nuevaEstadia);
+            paqueteActual.getEstadia().setAlojamiento(alojamientoElegido);
+           //Calculo de días para total de estadía
+            long difDiasMilSeg = pasarADate(paqueteActual.getFechaIni()).getTime() - pasarADate(paqueteActual.getFechaFin()).getTime();
+            long diasEstadia = TimeUnit.DAYS.convert(difDiasMilSeg, TimeUnit.MILLISECONDS);
+            paqueteActual.getEstadia().setMonto(diasEstadia*precioNoche);
         } else {
             JOptionPane.showMessageDialog(rootPane, "Debe seleccionar todas las opciones");
         }
+        vistaContratar.cargarDatosPaqueteActual();
+        this.dispose();
     }//GEN-LAST:event_btn_confirmarActionPerformed
 
     private void jCbx_alojamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCbx_alojamientosActionPerformed
@@ -256,7 +287,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_jCbx_alojamientosActionPerformed
-    
+
     private void armarCabecera() {
         ArrayList<Object> filaCabecera = new ArrayList<>();
         filaCabecera.add("Cod. Alojamiento");
@@ -271,15 +302,15 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         jTable_alojamientos.setModel(modelo);
     }
-    
+
     private void borrarfilaTabla() {
         int indice = modelo.getRowCount() - 1;
-        
+
         for (int i = indice; i >= 0; i--) {
             modelo.removeRow(i);
         }
     }
-    
+
     public void cargarCbxAlojamientos() {
         ArrayList<String> tipodealojamiento = new ArrayList();
         String[] tiposdealojamientos = {"Cabaña", "Posada", "Hotel"};
@@ -287,7 +318,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             jCbx_alojamientos.addItem(elemento);
         }
     }
-    
+
     public void cargarCbxPension() {
         HashSet<Pension> listaPensionespornombre = accesoPension.listarPensiones();
         jCbx_pension.removeAllItems();
@@ -296,7 +327,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         listarPensiones = listaPensionespornombre;
     }
-    
+
     public void cargarCbxTransporte() {
         ArrayList<String> transporte = new ArrayList();
         String[] transportes = {"Avión - PRIMERA  CLASE", "Avión - CLASE MEDIA", "Colectivo - EJECUTIVO", "Colectivo - SEMICAMA"};
@@ -304,7 +335,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             jCbx_transporte.addItem(elemento);
         }
     }
-    
+
     public void cargarAlojamientosDestino() {
         Ciudad origen = paqueteActual.getBoleto().getCiudadDestino();
         this.alojamientos = accesoAlojamiento.buscarAlojamientPorCiudad(origen.getCodCiudad());
@@ -312,7 +343,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             modelo.addRow(new Object[]{alojamiento.getCodAlojam(), alojamiento.getNombreAlojamiento(), alojamiento.getDireccion(), alojamiento.getCapacidad(), alojamiento.getHabitaciones(), alojamiento.getBanios(), alojamiento.getPrecioNoche()});
         }
     }
-    
+
     public ArrayList<Alojamiento> filtrarAlojamientosPorTipo(String tipo) {
         ArrayList<Alojamiento> listaNueva = new ArrayList();
         if (jCbx_alojamientos.getSelectedItem() != null) {
@@ -324,10 +355,15 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
         }
         return listaNueva;
     }
-    
+
     private boolean opcionesSeleccionadasOK() {
         return jTable_alojamientos.getSelectedRow() != -1 && jCbx_pension.getSelectedItem() != null && (jRbt_si.isSelected() || jRbt_no.isSelected() && jCbx_transporte.getSelectedItem() != null);
     }
+    private Date pasarADate(LocalDate fechaLocal) {
+        Date fecha = Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return fecha;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_confirmar;
     private javax.swing.JComboBox<String> jCbx_alojamientos;
