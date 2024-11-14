@@ -7,9 +7,11 @@ package Persistencia;
 import Entidades.Paquete;
 import Entidades.Turista;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -186,5 +188,29 @@ public class PaqueteData {
 }
     
     
-    
+    public ArrayList<Paquete> buscarPaqueteDesde(LocalDate fecha){
+       String sql = "SELECT codPaquete, dniTurista, boleto, tipo, fechaIni, fechaFin "
+               + "FROM paquete "
+               + "WHERE fechaCompra >= ?";
+       ArrayList <Paquete> listaDePaquetes = new ArrayList();
+        try ( PreparedStatement ps = conexion.prepareStatement(sql)) {
+            
+        ps.setDate(1, Date.valueOf (fecha));
+        
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Paquete paquete = new Paquete();
+            paquete.setCodPaquete(rs.getInt("codPaquete"));
+            paquete.setTurista(accesoTurista.buscarTuristaPorDNI(rs.getInt("dniTurista")));
+            paquete.setBoleto(accesoPasaje.buscarPasaje(rs.getInt("boleto")));
+            paquete.setTipo(rs.getString("tipo"));
+            paquete.setFechaIni(rs.getDate("fechaIni").toLocalDate());
+            paquete.setFechaFin(rs.getDate("fechaFin").toLocalDate());
+            listaDePaquetes.add(paquete);
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al cargar ultimos 2 meses");
+    }
+        return listaDePaquetes;
+    }    
 }

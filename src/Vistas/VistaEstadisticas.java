@@ -4,23 +4,38 @@
  */
 package Vistas;
 
+import Entidades.Paquete;
+import Persistencia.Conexion;
+import Persistencia.PaqueteData;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Santiago Lara
  */
 public class VistaEstadisticas extends javax.swing.JInternalFrame {
-   private DefaultTableModel tabla = new DefaultTableModel();
-   
+    private Connection conexion = null;
+    private DefaultTableModel tabla = new DefaultTableModel();
+    private DefaultTableModel tabla2 = new DefaultTableModel();
+    private PaqueteData accesoPaquete = new PaqueteData();
+    
     public VistaEstadisticas() {
         initComponents();
-        
+        conexion = Conexion.getConexion();
         tabla = new DefaultTableModel();
-        armarCabecera();
+        armarCabeceraPaquetes();
+        armarCabeceraFiltro();
+        cargarTabla();
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -29,16 +44,16 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_paquetes = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        botonMes = new javax.swing.JRadioButton();
+        botonTemporada = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jComboBox1 = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        jTable_Filtrado = new javax.swing.JTable();
+        botonSalir = new javax.swing.JButton();
 
         setClosable(true);
 
@@ -59,22 +74,32 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Buscar por:");
 
-        jRadioButton1.setText("Mes");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonMes.setText("Mes");
+        botonMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                botonMesActionPerformed(evt);
             }
         });
 
-        jRadioButton2.setText("Temporada");
+        botonTemporada.setText("Temporada");
+        botonTemporada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonTemporadaActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Mes Inicio:");
 
         jLabel4.setText("Mes Fin:");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTable_Filtrado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -85,9 +110,14 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(jTable_Filtrado);
 
-        jButton1.setText("Salir");
+        botonSalir.setText("Salir");
+        botonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,15 +130,15 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botonMes)
                         .addGap(18, 18, 18)
-                        .addComponent(jRadioButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jRadioButton2)
+                        .addComponent(botonTemporada)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -126,7 +156,7 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane2))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(botonSalir)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -139,8 +169,8 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
+                    .addComponent(botonMes)
+                    .addComponent(botonTemporada))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -151,30 +181,80 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(botonSalir)
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void botonMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_botonMesActionPerformed
 
-    
-    private void armarCabecera(){
-        tabla.addColumn("codPaq");
-        tabla.addColumn("Nombre");
-        tabla.addColumn("Destino");
-        tabla.addColumn("Tipo");
-        tabla.addColumn("Fecha In");
-        tabla.addColumn("Fecha Fin");
+    private void botonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirActionPerformed
+        dispose();        // TODO add your handling code here:
+    }//GEN-LAST:event_botonSalirActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void botonTemporadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTemporadaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonTemporadaActionPerformed
+
+    private void armarCabeceraPaquetes() {
+        ArrayList<Object> cabecera = new ArrayList<>();
+        cabecera.add("codPaq");
+        cabecera.add("Nombre");
+        cabecera.add("Destino");
+        cabecera.add("Tipo");
+        cabecera.add("Fecha In");
+        cabecera.add("Fecha Fin");
+        for (Object i : cabecera) {
+            tabla.addColumn(i);
+        }
         jTable_paquetes.setModel(tabla);
     }
 
+    
+    private void armarCabeceraFiltro() {
+        ArrayList<Object> cabecera = new ArrayList<>();
+        cabecera.add("Destino");
+        cabecera.add("Cantidad Paquetes");
+        for (Object i : cabecera) {
+            tabla2.addColumn(i);
+        }
+        jTable_Filtrado.setModel(tabla2);
+    }
+
+    
+    private void cargarTabla(){
+        LocalDate fechaLimite = LocalDate.now().minusMonths(2);
+        ArrayList<Paquete> lista = accesoPaquete.buscarPaqueteDesde(fechaLimite);
+        System.out.println(lista);
+        borrarfilaTabla();
+        for (Paquete paquete : lista) {
+            tabla.addRow(new Object []{
+            paquete.getCodPaquete(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getBoleto().getCiudadDestino().getNombre(),paquete.getTipo(), paquete.getFechaIni(), paquete.getFechaFin()
+            });
+        }
+
+    }
+    
+     private void borrarfilaTabla() {
+        
+        int indice = tabla.getRowCount() - 1;
+
+        for (int i = indice; i >= 0; i--) {
+            tabla.removeRow(i);
+        }
+     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JRadioButton botonMes;
+    private javax.swing.JButton botonSalir;
+    private javax.swing.JRadioButton botonTemporada;
     private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
@@ -182,11 +262,9 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable_Filtrado;
     private javax.swing.JTable jTable_paquetes;
     // End of variables declaration//GEN-END:variables
 }
