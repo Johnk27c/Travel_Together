@@ -5,6 +5,7 @@
 package Vistas;
 
 import Entidades.Alojamiento;
+import Entidades.Paquete;
 import Entidades.Pension;
 import Persistencia.PensionData;
 import java.util.ArrayList;
@@ -17,19 +18,22 @@ import javax.swing.table.DefaultTableModel;
  * @author Jon_kevin27
  */
 public class VistaPersonalizado extends javax.swing.JInternalFrame {
-    
+
     ArrayList<Alojamiento> alojamientos = new ArrayList();
     ArrayList<String> pensiones = new ArrayList();
     private HashSet<Pension> listarPensiones = new HashSet();
-    private PensionData accesoPension = new PensionData();    
+    private PensionData accesoPension = new PensionData();
     private DefaultTableModel modelo = new DefaultTableModel();
+    private Paquete paqueteActual;
+    private String origen;
 
     /**
      * Creates new form VistaPersonalizado
      */
-    public VistaPersonalizado() {
+    public VistaPersonalizado(Paquete paquete, String origen) {
         initComponents();
-        
+        this.paqueteActual = paquete;
+        this.origen = origen;
         modelo = new DefaultTableModel();
         cargarCbxAlojamientos();// carga los tipos de alojamientos
         cargarCbxPension();// carga las pensiones
@@ -213,7 +217,7 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jCbx_alojamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCbx_alojamientosActionPerformed
-        // TODO add your handling code here:
+        System.out.println(paqueteActual.getFechaIni());
     }//GEN-LAST:event_jCbx_alojamientosActionPerformed
 
     private void armarCabecera() {
@@ -237,28 +241,28 @@ public class VistaPersonalizado extends javax.swing.JInternalFrame {
             modelo.removeRow(i);
         }
     }
-    
+
     public void cargarCbxAlojamientos() {
-       ArrayList<String>tipodealojamiento= new ArrayList();
-        String[] tiposdealojamientos = {"Cabaña", "Posada", "Hotel"}; 
-        for (String elemento : tiposdealojamientos) { 
+        ArrayList<String> tipodealojamiento = new ArrayList();
+        String[] tiposdealojamientos = {"Cabaña", "Posada", "Hotel"};
+        for (String elemento : tiposdealojamientos) {
             jCbx_alojamientos.addItem(elemento);
-        } 
+        }
     }
-        
-    public void cargarCbxPension() {               
-        HashSet<Pension>listaPensionespornombre = accesoPension.listarPensiones();
+
+    public void cargarCbxPension() {
+        HashSet<Pension> listaPensionespornombre = accesoPension.listarPensiones();
         jCbx_pension.removeAllItems();
         for (Pension nombre : listaPensionespornombre) {
             jCbx_pension.addItem(nombre);
         }
         listarPensiones = listaPensionespornombre;
     }
-    
-    public void cargarCbxTransporte(){
-        ArrayList<String>transporte= new ArrayList();
-        String[] transportes = {"Avión - PRIMERA  CLASE", "Avión - CLASE MEDIA", "Colectivo - EJECUTIVO", "Colectivo - SEMICAMA"}; 
-        for (String elemento : transportes) { 
+
+    public void cargarCbxTransporte() {
+        ArrayList<String> transporte = new ArrayList();
+        String[] transportes = {"Avión - PRIMERA  CLASE", "Avión - CLASE MEDIA", "Colectivo - EJECUTIVO", "Colectivo - SEMICAMA"};
+        for (String elemento : transportes) {
             jCbx_transporte.addItem(elemento);
         }
     }

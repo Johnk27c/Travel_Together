@@ -8,7 +8,7 @@ import Persistencia.TuristaData;
  * @author Gabriel Jara
  */
 public class VistaPrincipal extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form VistaPrincipal
      */
@@ -139,7 +139,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void jMenuItem_contratarPaqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_contratarPaqueteActionPerformed
         jDesktopPanel.removeAll();
         jDesktopPanel.repaint();
-        VistaContratarPaquete vistaContratarPaquete = new VistaContratarPaquete();
+        VistaContratarPaquete vistaContratarPaquete = new VistaContratarPaquete(jDesktopPanel);
         vistaContratarPaquete.setVisible(true);
         jDesktopPanel.add(vistaContratarPaquete);
     }//GEN-LAST:event_jMenuItem_contratarPaqueteActionPerformed
@@ -174,11 +174,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jM_cargaPersonasActionPerformed
 
     private void jMenuItem_personalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_personalizadoActionPerformed
-        jDesktopPanel.removeAll();
-        jDesktopPanel.repaint();
-        VistaPersonalizado vistaPersonalizado = new VistaPersonalizado();
-        vistaPersonalizado.setVisible(true);
-        jDesktopPanel.add(vistaPersonalizado);
+//        jDesktopPanel.removeAll();
+//        jDesktopPanel.repaint();
+//        VistaPersonalizado vistaPersonalizado = new VistaPersonalizado();
+//        vistaPersonalizado.setVisible(true);
+//        jDesktopPanel.add(vistaPersonalizado);
     }//GEN-LAST:event_jMenuItem_personalizadoActionPerformed
 
     /**

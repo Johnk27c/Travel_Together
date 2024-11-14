@@ -4,6 +4,7 @@ import Entidades.Alojamiento;
 import Entidades.Ciudad;
 import Entidades.Estadia;
 import Entidades.Paquete;
+import Entidades.Pasaje;
 import Entidades.Pension;
 import Persistencia.AlojamientoData;
 import Persistencia.CiudadData;
@@ -11,13 +12,16 @@ import Persistencia.PensionData;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Gabriel Jara
  */
 public class VistaContratarPaquete extends javax.swing.JInternalFrame {
-
+    
     private ArrayList<String> temporadas = new ArrayList();
     private CiudadData accesoCiudad = new CiudadData();
     private AlojamientoData accesoAlojamiento = new AlojamientoData();
@@ -38,11 +42,13 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private boolean fechasOK;
     private Pension pensionActual;
     private Estadia estadiaActual;
+    private Pasaje pasaje;
+    private JDesktopPane jDesktopPanel;
 
     /**
      * Creates new form ContratarPaquete
      */
-    public VistaContratarPaquete() {
+    public VistaContratarPaquete(JDesktopPane jDP) {
         initComponents();
         temporadas.add("Temporada Alta: Mes de julio de 2025 y desde el 15 de diciembre al 28 de febrero");
         temporadas.add("Temporada Media: 21 de septiembre al 14 de diciembre// 17 de abril al 20 de abril (Sem. Santa)");
@@ -57,7 +63,8 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         armarCabecera();
         cbx_tipoPaquete.setSelectedIndex(-1);
         date_fechaInicio.setMinSelectableDate(new Date());
-
+        jDesktopPanel=jDP;
+        
     }
 
     /**
@@ -390,7 +397,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         borrarfilaTabla();
         date_fechaInicio.setDate(null);
         date_fechaFin.setDate(null);
-        
+
     }//GEN-LAST:event_cbx_temporadaActionPerformed
 
     private void cbx_ciudadOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_ciudadOrigenActionPerformed
@@ -418,10 +425,22 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         if (cbx_tipoPaquete.getSelectedItem() != null) {
             spn_cantAdultos.setEnabled(true);
             spn_cantMenores.setEnabled(true);
+            long difDiasMilSeg = date_fechaFin.getDate().getTime() - date_fechaInicio.getDate().getTime();
+            long difDias = TimeUnit.DAYS.convert(difDiasMilSeg, TimeUnit.MILLISECONDS);
+            System.out.println(difDias);
             switch (cbx_tipoPaquete.getSelectedItem().toString()) {
                 case "Personalizado":
-
-//                    VistaPersonalizado vista = new VistaPersonalizado();//asociar Paquete cuando Jon finalice
+                    paqueteActual.setFechaIni(pasarALocalDate(date_fechaInicio.getDate()));
+                    paqueteActual.setFechaFin(pasarALocalDate(date_fechaFin.getDate()));
+                    pasaje = new Pasaje(pasarALocalDate(date_fechaInicio.getDate()).atStartOfDay(), (Ciudad) cbx_ciudadOrigen.getSelectedItem(), (Ciudad) cbx_ciudadDestino.getSelectedItem(), 5, 345435);
+                    paqueteActual.setBoleto(pasaje);
+                    paqueteActual.setTemporada((String) cbx_temporada.getSelectedItem());
+                    paqueteActual.setTipo("Personalizado");
+                    VistaPersonalizado vista = new VistaPersonalizado(paqueteActual, "Contratar");
+                    vista.setVisible(true);
+                    jDesktopPanel.add(vista);
+                    vista.show();
+                    this.toBack();
                     borrarfilaTabla();
                     System.out.println("Personalizado");
                     break;
@@ -450,7 +469,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_cbx_tipoPaqueteActionPerformed
-
+    
     private void cargarCbx(HashSet lista, JComboBox comboBox) {
         comboBox.removeAllItems();
         if (lista.size() > 0) {
@@ -460,10 +479,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
         comboBox.setSelectedIndex(-1);
     }
-
+    
     private void actualizarCiudadesDestino() { //Actualiza array de ciudades de destino en base a la ciudad de Origen seleccionada
         HashSet<Ciudad> listaDestino = new HashSet();
-
+        
         HashSet<Integer> idCiudadesDestino = accesoAlojamiento.mostrarCiudades();
         System.out.println(idCiudadesDestino);
         for (Integer id : idCiudadesDestino) {
@@ -482,10 +501,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         listaCiudadesDestino = listaDestino;
         System.out.println(listaDestino);
     }
-
+    
     private void cargarCiudadesOrigen() {
         HashSet<Ciudad> listaOrigen = new HashSet();
-
+        
         HashSet<Integer> idCiudadesOrigen = accesoCiudad.listarCiudades();
         for (Integer id : idCiudadesOrigen) {
             listaOrigen.add((Ciudad) accesoCiudad.buscarCiudadPorID(id));
@@ -495,7 +514,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
         listaCiudadesOrigen = listaOrigen;
     }
-
+    
     private void cargarEventosFechas() {
         date_fechaInicio.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
@@ -504,7 +523,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                 date_fechaFin.setMinSelectableDate(date_fechaInicio.getDate());
             }
         });
-
+        
         date_fechaFin.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -512,7 +531,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             }
         });
     }
-
+    
     private void verificarFechas() {
         if (date_fechaInicio.getDate() != null && date_fechaFin.getDate() != null) {
             Date fechaIni = date_fechaInicio.getDate();
@@ -569,27 +588,32 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
         verificarYActivarCbx();
     }
-
+    
     private boolean estaEntreFechas(Date inicio, Date fin, Date limiteIni, Date limiteFin) {
         return (inicio.equals(limiteIni) || inicio.after(limiteIni)) && (fin.before(limiteFin) || fin.equals(limiteFin));
     }
-
+    
     private Date pasarADate(int anio, Month mes, int dia) {
         Date fecha = Date.from(LocalDate.of(anio, mes, dia).atStartOfDay(ZoneId.systemDefault()).toInstant());
         return fecha;
     }
-
+    
+    private LocalDate pasarALocalDate(Date fecha) {
+        LocalDate fechaLocal = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return fechaLocal;
+    }
+    
     private boolean datosInicialesCargados() {
         return date_fechaFin.getDate() != null && date_fechaInicio.getDate() != null && cbx_ciudadOrigen.getSelectedItem() != null && cbx_ciudadDestino.getSelectedItem() != null && cbx_temporada.getSelectedItem() != null && fechasOK;
     }
-
+    
     private void reiniciarYDeshabilitarSpinners() {
         spn_cantAdultos.setEnabled(false);
         spn_cantAdultos.setValue(0);
         spn_cantMenores.setEnabled(false);
         spn_cantMenores.setValue(0);
     }
-
+    
     private void verificarYActivarCbx() {
         if (datosInicialesCargados()) {
             cbx_tipoPaquete.setEnabled(true);
@@ -600,7 +624,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             reiniciarYDeshabilitarSpinners();
         }
     }
-
+    
     private void armarCabecera() {
         ArrayList<Object> filaCabecera = new ArrayList<>();
         filaCabecera.add("Descripción");
@@ -612,7 +636,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         tabla_informacion.setModel(modelo);
         tabla_informacion.getColumnModel().getColumn(2).setPreferredWidth(20);
     }
-
+    
     private Alojamiento buscarAlojamientoEstandarOEconomico(Ciudad cdad, String maxMin) {
         ArrayList<Alojamiento> listaAlojamientos = accesoAlojamiento.buscarAlojamientPorCiudad(cdad.getCodCiudad());
         System.out.println(listaAlojamientos);
@@ -631,7 +655,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
         return alojamientoSeleccionado;
     }
-
+    
     private void borrarfilaTabla() {
         int indice = modelo.getRowCount() - 1;
         for (int i = indice; i >= 0; i--) {
