@@ -57,6 +57,8 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
         jB_finalizar = new javax.swing.JButton();
         jD_fechaNacimiento = new com.toedter.calendar.JDateChooser();
 
+        setClosable(true);
+
         jLabel1.setText("Nombre :");
 
         jLabel2.setText("Apellido");
@@ -189,36 +191,46 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "No deben haber campos vacios");
                 return;
             }
-            for (Turista t : listaTuristas) {
-                if (t.getDni() == dni) {
-                    JOptionPane.showMessageDialog(this, "El DNI ingresado ya existe");
-                    return;
-                }
-            }
             LocalDate fechaNac = jD_fechaNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            Turista nuevoTurista = new Turista(dni, nombre, apellido, fechaNac);
-            listaTuristas.add(nuevoTurista);
+            turistaActual = turistaD.buscarTuristaPorDNI(dni);
+            if (turistaActual == null) {
+                Turista nuevoTurista = new Turista(dni, nombre, apellido, fechaNac);
+                turistaD.guardarTurista(nuevoTurista);
+                listaTuristas.add(nuevoTurista);
+            } else {
+                for (Turista t : listaTuristas) {
+                    if (t.getDni() == dni) {
+                        JOptionPane.showMessageDialog(this, "El DNI ingresado ya existe");
+                        return;
+                    }
+                }
+                listaTuristas.add(turistaActual);
+            }
             cargarTabla();
             limpiarCampos();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Debe Ingresar un DNI valido");
 
         }
+
     }//GEN-LAST:event_jB_agregarActionPerformed
 
     private void jB_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_buscarActionPerformed
         try {
             int dni = Integer.valueOf(jT_dni.getText());
             turistaActual = turistaD.buscarTuristaPorDNI(dni);
+
             if (turistaActual != null) {
                 jT_nombre.setText(turistaActual.getNombre());
                 jT_apellido.setText(turistaActual.getApellido());
                 LocalDate lc = turistaActual.getFechaNac();
                 java.util.Date date = java.util.Date.from(lc.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 jD_fechaNacimiento.setDate(date);
+            } else {
+                JOptionPane.showMessageDialog(null, "No existe un turista con el DNI indicado");
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Debe ingresar un DNI valido");
+            JOptionPane.showMessageDialog(this, "Debe ingresar un DNI válido");
         }
 
     }//GEN-LAST:event_jB_buscarActionPerformed
@@ -228,13 +240,10 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Debe agregar turistas para finalizar su compra");
             return;
         }
-        for (Turista t : listaTuristas) {
-            turistaD.guardarTurista(t);
-        }
-        JOptionPane.showMessageDialog(this, "Solo pueden darse de baja 30 dias antes y modificaciones 10 dias antes de la fecha de inicio");
+        JOptionPane.showMessageDialog(this, "Compra Confirmada! Solo pueden darse de baja 30 dias antes y modificaciones 10 dias antes de la fecha de inicio");
         listaTuristas.clear();
         limpiarCampos();
-        cargarTabla();
+
     }//GEN-LAST:event_jB_finalizarActionPerformed
 
 

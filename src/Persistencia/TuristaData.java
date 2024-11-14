@@ -97,9 +97,7 @@ public class TuristaData {
                 turista.setApellido(rs.getString("apellido"));
                 turista.setNombre(rs.getString("nombre"));
                 turista.setFechaNac(rs.getDate("fechaNacimiento").toLocalDate());
-            } else {
-                JOptionPane.showMessageDialog(null, "No existe un turista con el DNI indicado");
-            }
+            } 
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla turista de la base de datos.");
