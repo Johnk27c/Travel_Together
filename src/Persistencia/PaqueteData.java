@@ -5,6 +5,7 @@
 package Persistencia;
 
 import Entidades.Paquete;
+import Entidades.Turista;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -168,7 +169,21 @@ public class PaqueteData {
         return listaDePaquetes;
         
     }
-    
+    public void agregarTuristaAlPaquete(Paquete paquete, Turista turista) {
+    String sql = "UPDATE paquete SET dniTurista = ? WHERE codPaquete = ?";
+
+    try {
+        PreparedStatement ps = conexion.prepareStatement(sql);
+        ps.setInt(1, turista.getDni());  
+        ps.setInt(2, paquete.getCodPaquete()); 
+
+        ps.executeUpdate();
+        JOptionPane.showMessageDialog(null, "El turista ha sido agregado al paquete exitosamente.");
+        ps.close();
+    } catch (SQLException ex) {
+      JOptionPane.showMessageDialog(null, "Error al acceder a tabla paquete");
+    }
+}
     
     
     

@@ -4,7 +4,9 @@
  */
 package Vistas;
 
+import Entidades.Paquete;
 import Entidades.Turista;
+import Persistencia.PaqueteData;
 import Persistencia.TuristaData;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -20,7 +22,9 @@ import javax.swing.table.DefaultTableModel;
 public class VistaCargaPersonas extends javax.swing.JInternalFrame {
 
     private TuristaData turistaD = new TuristaData();
+    private PaqueteData paqueteD = new PaqueteData();
     private Turista turistaActual = null;
+    private Paquete paqueteActual;
     private HashSet<Turista> listaTuristas = new HashSet();
     private DefaultTableModel modelo = new DefaultTableModel();
 
@@ -239,7 +243,9 @@ public class VistaCargaPersonas extends javax.swing.JInternalFrame {
         if (listaTuristas.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe agregar turistas para finalizar su compra");
             return;
-        }
+        } for (Turista turista : listaTuristas) {
+        paqueteD.agregarTuristaAlPaquete(paqueteActual, turista);
+    }
         JOptionPane.showMessageDialog(this, "Compra Confirmada! Solo pueden darse de baja 30 dias antes y modificaciones 10 dias antes de la fecha de inicio");
         listaTuristas.clear();
         limpiarCampos();
