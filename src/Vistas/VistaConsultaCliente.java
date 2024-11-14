@@ -17,10 +17,14 @@ import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Vistas.VistaPersonalizado;
+import java.awt.Component;
 import java.time.LocalDate;
 import javax.swing.JDesktopPane;
+import javax.swing.JDialog;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import static sun.jvm.hotspot.HelloWorld.e;
 
 /**
  *
@@ -198,7 +202,27 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jB_ConfirmarActionPerformed
 
     private void jB_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ModificarActionPerformed
-//        JOptionPane.showConfirmDialog(rootPane, "")
+       
+        
+        
+       Object[] options = {"Continuar", "Cancelar"};
+        int n = JOptionPane.showOptionDialog(null,
+                "A continuacion, podra modificar la pension, opcion de traslado, y transporte de un paquete previamente contratado. Esta modificacion implicara un cargo adicional, el cual se vera reflejado en el importe final, ¿Desea continuar?",
+                "Titulo de dialog",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+        
+        if (n == JOptionPane.YES_OPTION) {
+            System.out.println("");
+        }else if (n == JOptionPane.NO_OPTION){
+            System.out.println("Cancelando la modificacion...");
+            dispose();
+            
+            
+        }
         
        if(jTable1.getSelectedRow()!= -1){
            
