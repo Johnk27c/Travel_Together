@@ -2,6 +2,7 @@ package Vistas;
 
 import Entidades.Alojamiento;
 import Entidades.Ciudad;
+import Entidades.Estadia;
 import Entidades.Paquete;
 import Entidades.Pension;
 import Persistencia.AlojamientoData;
@@ -35,6 +36,8 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
     private DefaultTableModel modelo = new DefaultTableModel();
     private PensionData accesoPension = new PensionData();
     private boolean fechasOK;
+    private Pension pensionActual;
+    private Estadia estadiaActual;
 
     /**
      * Creates new form ContratarPaquete
@@ -53,6 +56,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         cbx_tipoPaquete.setEnabled(false);
         armarCabecera();
         cbx_tipoPaquete.setSelectedIndex(-1);
+        date_fechaInicio.setMinSelectableDate(new Date());
 
     }
 
@@ -171,7 +175,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -184,6 +188,9 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         });
         tabla_informacion.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tabla_informacion);
+        if (tabla_informacion.getColumnModel().getColumnCount() > 0) {
+            tabla_informacion.getColumnModel().getColumn(2).setPreferredWidth(100);
+        }
 
         btn_contratar.setText("Contratar");
 
@@ -380,6 +387,10 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             lbl_temporada.setText(temporadas.get(2));
         }
         verificarYActivarCbx();
+        borrarfilaTabla();
+        date_fechaInicio.setDate(null);
+        date_fechaFin.setDate(null);
+        
     }//GEN-LAST:event_cbx_temporadaActionPerformed
 
     private void cbx_ciudadOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_ciudadOrigenActionPerformed
@@ -395,10 +406,12 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             cargarCbx(listaCiudadesDestino, cbx_ciudadDestino);
         }
         verificarYActivarCbx();
+        borrarfilaTabla();
     }//GEN-LAST:event_cbx_ciudadOrigenActionPerformed
 
     private void cbx_ciudadDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_ciudadDestinoActionPerformed
-        verificarYActivarCbx();     
+        verificarYActivarCbx();
+        borrarfilaTabla();
     }//GEN-LAST:event_cbx_ciudadDestinoActionPerformed
 
     private void cbx_tipoPaqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbx_tipoPaqueteActionPerformed
@@ -407,26 +420,31 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             spn_cantMenores.setEnabled(true);
             switch (cbx_tipoPaquete.getSelectedItem().toString()) {
                 case "Personalizado":
+
 //                    VistaPersonalizado vista = new VistaPersonalizado();//asociar Paquete cuando Jon finalice
                     borrarfilaTabla();
                     System.out.println("Personalizado");
                     break;
                 case "Estándar":
                     Alojamiento alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Maximo");
-                    Pension regimen = accesoPension.buscarPorCodigo(2);
+                    pensionActual = accesoPension.buscarPorCodigo(2);
                     borrarfilaTabla();
-                    modelo.addRow(new Object[]{"Alojamiento",alo.getTipo()+": "+alo.getNombreAlojamiento(),alo.getPrecioNoche()});
-                    modelo.addRow(new Object[]{"Pensión (% del total)",regimen.getNombre() ,regimen.getPorcentaje()});
-                    modelo.addRow(new Object[]{"Transporte","Avión - CLASE MEDIA" ,90000});
+                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche()});
+                    modelo.addRow(new Object[]{"Pensión (% del total)", pensionActual.getNombre(), pensionActual.getPorcentaje()});
+                    modelo.addRow(new Object[]{"Transporte", "Avión - CLASE MEDIA", 90000});
+                    modelo.addRow(new Object[]{"Traslado(% del total)", "Sí", 0.01});
+                    modelo.addRow(new Object[]{"Valor por persona", "", 000});
                     System.out.println(alo);
                     break;
                 default:
                     alo = buscarAlojamientoEstandarOEconomico((Ciudad) cbx_ciudadDestino.getSelectedItem(), "Minimo");
-                    regimen = accesoPension.buscarPorCodigo(1);
+                    pensionActual = accesoPension.buscarPorCodigo(1);
                     borrarfilaTabla();
-                    modelo.addRow(new Object[]{"Alojamiento",alo.getTipo()+": "+alo.getNombreAlojamiento(),alo.getPrecioNoche()});
-                    modelo.addRow(new Object[]{"Pensión (% del total)",regimen.getNombre() ,regimen.getPorcentaje()});
-                    modelo.addRow(new Object[]{"Transporte","Colectivo - SEMICAMA" ,35000});
+                    modelo.addRow(new Object[]{"Alojamiento (Capacidad)", alo.getTipo() + ": " + alo.getNombreAlojamiento() + " (" + alo.getCapacidad() + ")", alo.getPrecioNoche()});
+                    modelo.addRow(new Object[]{"Pensión (% del total)", pensionActual.getNombre(), pensionActual.getPorcentaje()});
+                    modelo.addRow(new Object[]{"Transporte", "Colectivo - SEMICAMA", 35000});
+                    modelo.addRow(new Object[]{"Traslado(% del total)", "Sí", 0.01});
+                    modelo.addRow(new Object[]{"Valor por persona", "", 000});
                     System.out.println(alo);
                     break;
             }
@@ -483,6 +501,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 verificarFechas();
+                date_fechaFin.setMinSelectableDate(date_fechaInicio.getDate());
             }
         });
 
@@ -510,6 +529,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     } else {
                         fechasOK = false;
                         JOptionPane.showMessageDialog(null, "Es temporada ALTA: la fecha debería estar entre " + temporadas.get(0));
+                        date_fechaFin.setDate(null);
                     }
                 } else if (cbx_temporada.getSelectedItem().equals("Media")) {
                     Date fechaInicio1 = pasarADate(2024, Month.SEPTEMBER, 21);
@@ -522,6 +542,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     } else {
                         fechasOK = false;
                         JOptionPane.showMessageDialog(null, "Es temporada MEDIA: la fecha debería estar entre " + temporadas.get(1));
+                        date_fechaFin.setDate(null);
                     }
                 } else if (cbx_temporada.getSelectedItem().equals("Baja")) {
                     Date fechaInicio1 = pasarADate(2025, Month.MARCH, 1);
@@ -536,6 +557,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
                     } else {
                         fechasOK = false;
                         JOptionPane.showMessageDialog(null, "Es temporada BAJA: la fecha debería estar entre " + temporadas.get(2));
+                        date_fechaFin.setDate(null);
                     }
                 }
             } else {
@@ -588,6 +610,7 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             modelo.addColumn(it);
         }
         tabla_informacion.setModel(modelo);
+        tabla_informacion.getColumnModel().getColumn(2).setPreferredWidth(20);
     }
 
     private Alojamiento buscarAlojamientoEstandarOEconomico(Ciudad cdad, String maxMin) {
@@ -608,14 +631,14 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
         }
         return alojamientoSeleccionado;
     }
-    
+
     private void borrarfilaTabla() {
         int indice = modelo.getRowCount() - 1;
         for (int i = indice; i >= 0; i--) {
             modelo.removeRow(i);
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_contratar;
     private javax.swing.JComboBox<Ciudad> cbx_ciudadDestino;

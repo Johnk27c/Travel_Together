@@ -65,7 +65,7 @@ public class PensionData {
     }
 
     public void guardarPension(Pension pension) {
-        String sql = "INSERT into pension (codPensionl, nombre, porcentaje) "
+        String sql = "INSERT into pension (codPension, nombre, porcentaje) "
                 + "VALUES(?, ?, ?)";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
