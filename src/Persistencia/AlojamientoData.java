@@ -119,28 +119,29 @@ public class AlojamientoData {
         return ciudades;
     }
     
-    public Alojamiento buscarAlojamientPorCiudad(int codCiudad) {
-        String sql = "SELECT nombreAlojamiento, direccion, capacidad, habitaciones, baños, precios FROM alojamiento "
+    public ArrayList<Alojamiento> buscarAlojamientPorCiudad(int codCiudad) {
+        String sql = "SELECT codAlojamiento,nombreAlojamiento, tipo, direccion, capacidad, habitaciones, banios, precio FROM alojamiento "
                 + "WHERE codCiudad = ? ";
-        Alojamiento alojamiento = null;
+        ArrayList<Alojamiento> alojamientos = new ArrayList();
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, codCiudad);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                alojamiento = new Alojamiento(); 
+            while (rs.next()) {
+                Alojamiento alojamiento= new Alojamiento(); 
+                alojamiento.setCodAlojam(rs.getInt("codAlojamiento")); 
                 alojamiento.setNombreAlojamiento(rs.getString("nombreAlojamiento")); 
-                alojamiento.setDireccion(rs.getString("direccion")); 
+                alojamiento.setDireccion(rs.getString("direccion"));
+                alojamiento.setTipo(rs.getString("tipo"));
                 alojamiento.setCapacidad(rs.getInt("capacidad")); 
                 alojamiento.setHabitaciones(rs.getInt("habitaciones")); 
-                alojamiento.setBanios(rs.getInt("baños")); 
-                alojamiento.setPrecioNoche(rs.getDouble("precios"));
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontro un alojamiento con ese codigo");
+                alojamiento.setBanios(rs.getInt("banios")); 
+                alojamiento.setPrecioNoche(rs.getDouble("precio"));
+                alojamientos.add(alojamiento);
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Alojamiento");
         }
-        return alojamiento;
+        return alojamientos;
     }
 }

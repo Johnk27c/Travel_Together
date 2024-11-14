@@ -106,4 +106,9 @@ public class Alojamiento {
         this.direccion = direccion;
     }
 
+    @Override
+    public String toString() {
+        return "Alojamiento{" + "codAlojam=" + codAlojam + ", nombreAlojamiento=" + nombreAlojamiento + ", tipo=" + tipo + '}';
+    }
+
 }

@@ -18,44 +18,40 @@ import javax.swing.JOptionPane;
  * @author Franco
  */
 public class PensionData {
- 
+
     private Connection conexion = null;
 
     public PensionData() {
         conexion = Conexion.getConexion();
     }
 
-    
-    
-    public void buscarPorCodigo(int codAdicional){
-        String sql = "SELECT codAdicional, nombre, porcentaje FROM pension where codAdicional = ? ";
+    public Pension buscarPorCodigo(int codAdicional) {
+        String sql = "SELECT codPension, nombre, porcentaje FROM pension where codPension = ? ";
         Pension pension = null;
-        
-        try{
+
+        try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, codAdicional);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 pension = new Pension();
-                pension.setCodAdicional(rs.getInt("codAdicional"));
+                pension.setCodAdicional(rs.getInt("codPension"));
                 pension.setNombre(rs.getString("nombre"));
                 pension.setPorcentaje(rs.getDouble("porcentaje"));
-                                           
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "No existe una pension con el codigo ingresado.");
             }
-            
-        }catch (SQLException e){
+
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla pension.");
-        }       
+        }
+        return pension;
     }
-    
-    
-    
-    public void modificarPension(Pension pension){
+
+    public void modificarPension(Pension pension) {
         String sql = "UPDATE pension SET nombre = ?, porcentaje = ? "
-                + "WHERE codAdicional = ? ";
-        try{
+                + "WHERE codPension = ? ";
+        try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setString(1, pension.getNombre());
             ps.setDouble(2, pension.getCodAdicional());
@@ -63,50 +59,45 @@ public class PensionData {
             if (exito == 1) {
                 JOptionPane.showMessageDialog(null, "La pension ha sido modificada con exito.");
             }
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla pension en la base de datos.,");
         }
     }
-    
-    
-    
-    public void guardarPension(Pension pension){
-        String sql = "INSERT into pension (codAdicional, nombre, porcentaje) "
+
+    public void guardarPension(Pension pension) {
+        String sql = "INSERT into pension (codPensionl, nombre, porcentaje) "
                 + "VALUES(?, ?, ?)";
-        try{
+        try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, pension.getCodAdicional());
             ps.setString(2, pension.getNombre());
             ps.setDouble(3, pension.getPorcentaje());
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "La pension se guardo con exito.");
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla pension.");
         }
     }
-         
-    
-    
-    
-    public void eliminarPension(int codAdicional){
-        String sql = "DELETE FROM turista Where codAdicional = ? ";
-        try{
+
+    public void eliminarPension(int codAdicional) {
+        String sql = "DELETE FROM turista Where codPension = ? ";
+        try {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ps.setInt(1, codAdicional);
             int exito = ps.executeUpdate();
-            if (exito == 1){
+            if (exito == 1) {
                 JOptionPane.showMessageDialog(null, "Pension eliminada con exito.");
-            }else{
+            } else {
                 JOptionPane.showConfirmDialog(null, "No existe una pension con el codigo ingresado");
             }
-            
-        }catch (SQLException ex){
+
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al acceder a la tabla pension.");
         }
     }
-    
+
     public HashSet<Pension> listarPensiones() {
-        HashSet<Pension>listaPensiones = new HashSet();
+        HashSet<Pension> listaPensiones = new HashSet();
         String sql = "SELECT codPension, nombre, porcentaje FROM pension ";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -116,8 +107,8 @@ public class PensionData {
                 int codPension = rs.getInt("codPension");
                 String nombre = rs.getString("nombre");
                 double porcentaje = rs.getDouble("porcentaje");
-                
-                Pension pension= new Pension(codPension, nombre, porcentaje);
+
+                Pension pension = new Pension(codPension, nombre, porcentaje);
                 listaPensiones.add(pension);
             }
         } catch (SQLException ex) {
@@ -125,5 +116,5 @@ public class PensionData {
         }
         return listaPensiones;
     }
-       
+
 }
