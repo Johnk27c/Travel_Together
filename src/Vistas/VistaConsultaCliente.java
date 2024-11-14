@@ -4,17 +4,39 @@
  */
 package Vistas;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import Entidades.Paquete;
+import Entidades.Turista;
+import Persistencia.PaqueteData;
+import java.util.EventListener;
+import java.sql.*;
+
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Franco
  */
 public class VistaConsultaCliente extends javax.swing.JInternalFrame {
-
+    
+    private PaqueteData accesoPaquete;
+    private DefaultTableModel model = new DefaultTableModel();
+    
+    
+    
     /**
      * Creates new form VistaConsultaCliente
      */
     public VistaConsultaCliente() {
+        accesoPaquete = new PaqueteData();
         initComponents();
+        armarCabeceraTabla();
+        model = new DefaultTableModel();
+            
     }
 
     /**
@@ -27,20 +49,25 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        jB_Buscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jB_Modificar = new javax.swing.JButton();
+        jB_darDeBaja = new javax.swing.JButton();
+        jB_Confirmar = new javax.swing.JButton();
+        jT_dniComprador = new javax.swing.JTextField();
+
+        setClosable(true);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("DNI");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jButton1.setText("Buscar");
+        jB_Buscar.setText("Buscar");
+        jB_Buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_BuscarActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -55,73 +82,156 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton2.setText("Modificar");
+        jB_Modificar.setText("Modificar");
+        jB_Modificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_ModificarActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Dar de baja");
+        jB_darDeBaja.setText("Dar de baja");
+        jB_darDeBaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_darDeBajaActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Confirmar Modificaciones");
+        jB_Confirmar.setText("Confirmar Modificaciones");
+        jB_Confirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_ConfirmarActionPerformed(evt);
+            }
+        });
+
+        jT_dniComprador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jT_dniCompradorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(79, 79, 79)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(36, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(25, 25, 25))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(42, 42, 42)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jB_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(66, 66, 66))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jB_Confirmar, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                            .addComponent(jB_darDeBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(42, 42, 42))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(63, 63, 63)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jT_dniComprador, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jB_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(8, 8, 8)))
+                        .addGap(25, 25, 25))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
-                .addGap(17, 17, 17)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                    .addComponent(jT_dniComprador))
                 .addGap(18, 18, 18)
+                .addComponent(jB_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jB_Modificar, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(jB_darDeBaja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(47, 47, 47)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jB_Confirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jB_ConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ConfirmarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jB_ConfirmarActionPerformed
+
+    private void jB_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ModificarActionPerformed
+        
+    }//GEN-LAST:event_jB_ModificarActionPerformed
+
+    private void jB_darDeBajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_darDeBajaActionPerformed
+        
+    }//GEN-LAST:event_jB_darDeBajaActionPerformed
+
+    
+    private void jB_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_BuscarActionPerformed
+        
+        try{
+        if(!jT_dniComprador.getText().equals("")){
+            int dni = Integer.valueOf(jT_dniComprador.getText());
+            ArrayList<Paquete> lista = accesoPaquete.buscarCompradorDni(dni);
+            borrarfilaTabla();
+            
+            for (Paquete paquete : lista) {                
+                model.addRow(new Object[] {paquete.getCodPaquete(), paquete.getTurista().getDni(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getTipo(), paquete.getBoleto().getCiudadDestino().getNombre()});
+            }
+        }
+        }catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(rootPane, "Solo debe ingresar números.");
+        }
+    }//GEN-LAST:event_jB_BuscarActionPerformed
+
+    private void jT_dniCompradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jT_dniCompradorActionPerformed
+    
+    }//GEN-LAST:event_jT_dniCompradorActionPerformed
+
+    private void borrarfilaTabla() {
+        
+//        int indice = model.getRowCount() - 1;
+//
+//        for (int i = indice; i >= 0; i--) {
+//            model.removeRow(i);
+//        }
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); model.setRowCount(0);
+
+    }
+    
+  
+    private void armarCabeceraTabla(){
+        ArrayList<Object> filaCabecera = new ArrayList<>();
+        filaCabecera.add("codPaquete");
+        filaCabecera.add("DNI");
+        filaCabecera.add("Nombre");
+        filaCabecera.add("Tipo");
+        filaCabecera.add("Destino");
+        for(Object it: filaCabecera){
+            model.addColumn(it);
+        }
+        jTable1.setModel(model);
+    }
+    
+    
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jB_Buscar;
+    private javax.swing.JButton jB_Confirmar;
+    private javax.swing.JButton jB_Modificar;
+    private javax.swing.JButton jB_darDeBaja;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jT_dniComprador;
+    public javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

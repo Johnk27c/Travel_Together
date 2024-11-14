@@ -28,7 +28,7 @@ public class TuristaData {
 
     public void guardarTurista(Turista turista) {
 
-        String sql = "INSERT INTO turista (dni, apellido, nombre, fechaNac)"
+        String sql = "INSERT INTO turista (dni, apellido, nombre, fechaNacimiento)"
                 + "VALUES(?, ?, ?, ? )";
 
         try {
@@ -47,7 +47,7 @@ public class TuristaData {
     }
 
     public void modificarTurista(Turista turista) {
-        String sql = "UPDATE turista SET nombre = ?, apellido = ?, fechaNac = ? "
+        String sql = "UPDATE turista SET nombre = ?, apellido = ?, fechaNacimiento = ? "
                 + "WHERE dni = ?";
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -85,7 +85,7 @@ public class TuristaData {
     }
 
     public Turista buscarTuristaPorDNI(int dni) {
-        String sql = "SELECT dni, nombre, apellido, fechaNac FROM turista WHERE  dni = ? ";
+        String sql = "SELECT dni, nombre, apellido, fechaNacimiento FROM turista WHERE  dni = ? ";
         Turista turista = null;
         try {
             PreparedStatement ps = conexion.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class TuristaData {
                 turista.setDni(rs.getInt("dni"));
                 turista.setApellido(rs.getString("apellido"));
                 turista.setNombre(rs.getString("nombre"));
-                turista.setFechaNac(rs.getDate("fechaNac").toLocalDate());
+                turista.setFechaNac(rs.getDate("fechaNacimiento").toLocalDate());
             } else {
                 JOptionPane.showMessageDialog(null, "No existe un turista con el DNI indicado");
             }

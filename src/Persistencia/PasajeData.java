@@ -12,12 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
+
 /**
  * @author Santiago Lara
  */
 public class PasajeData {
     
     private Connection conexion = null;
+    private CiudadData accesoCiudad = new CiudadData();
     
     public  PasajeData(){
         conexion = Conexion.getConexion();
@@ -36,14 +38,11 @@ public class PasajeData {
                 
                 pasaje = new Pasaje();
                 pasaje.setCodPasaje(rs.getInt("codPasaje"));
-                pasaje.setFechaHora(rs.getTimestamp("fecharHora").toLocalDateTime());
-                Ciudad ciudadOrigen = new Ciudad();
-                ciudadOrigen.setCodCiudad(rs.getInt("idCiudad_Origen"));
-                pasaje.setCiudadOrigen(ciudadOrigen);
-
-                Ciudad ciudadDestino = new Ciudad();
-                ciudadDestino.setCodCiudad(rs.getInt("idCiudad_Destino"));
-                pasaje.setCiudadDestino(ciudadDestino);
+                pasaje.setFechaHora(rs.getTimestamp("fechaHora").toLocalDateTime());
+                
+                pasaje.setCiudadOrigen(accesoCiudad.buscarCiudadPorID(rs.getInt("idCiudad_Origen")));
+                pasaje.setCiudadDestino(accesoCiudad.buscarCiudadPorID(rs.getInt("idCiudad_Destino")));
+                
                 pasaje.setAsiento(rs.getInt("asiento"));
                 pasaje.setTransporte(rs.getString("transporte"));
                 pasaje.setPrecio(rs.getDouble("precio"));

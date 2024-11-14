@@ -17,6 +17,7 @@ public class Paquete {
     private Pension regimen;
     private Turista turista;
     private Turista comprador;
+    private String tipo;
     double montoFinal;
     double precioTraslados;
 
@@ -24,7 +25,7 @@ public class Paquete {
         
     }
 
-    public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, LocalDate fechaCompra, Pasaje boleto, String temporada, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados) {
+    public Paquete(int codPaquete, LocalDate fechaIni, LocalDate fechaFin, LocalDate fechaCompra, Pasaje boleto, String temporada, Estadia estadia, Pension regimen, Turista turista, Turista comprador, double montoFinal, double precioTraslados, String tipo) {
         this.codPaquete = codPaquete;
         this.fechaIni = fechaIni;
         this.fechaFin = fechaFin;
@@ -37,6 +38,7 @@ public class Paquete {
         this.comprador = comprador;
         this.montoFinal = montoFinal;
         this.precioTraslados = precioTraslados;
+        this.tipo = tipo;
     }
 
     public int getCodPaquete() {
@@ -133,6 +135,14 @@ public class Paquete {
 
     public void setPrecioTraslados(double precioTraslados) {
         this.precioTraslados = precioTraslados;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
     
     
