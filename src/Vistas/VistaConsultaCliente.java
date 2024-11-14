@@ -35,7 +35,7 @@ public class VistaConsultaCliente extends javax.swing.JInternalFrame {
         accesoPaquete = new PaqueteData();
         initComponents();
         armarCabeceraTabla();
-        model = new DefaultTableModel();
+        
             
     }
 
