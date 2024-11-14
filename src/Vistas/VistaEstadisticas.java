@@ -8,6 +8,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Map;
+import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,6 +35,11 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
         armarCabeceraPaquetes();
         armarCabeceraFiltro();
         cargarTabla();
+        DateChooserIni.setEnabled(false);
+        DateChooserFin.setEnabled(false);
+        ComboBoxTemp.setEnabled(false);
+        cargarComboBoxTemporada();
+        borrarFilaTabla2();
     }
 
     @SuppressWarnings("unchecked")
@@ -40,9 +54,9 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
         botonTemporada = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        DateChooserIni = new com.toedter.calendar.JDateChooser();
+        DateChooserFin = new com.toedter.calendar.JDateChooser();
+        ComboBoxTemp = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable_Filtrado = new javax.swing.JTable();
         botonSalir = new javax.swing.JButton();
@@ -84,10 +98,9 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Mes Fin:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        ComboBoxTemp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                ComboBoxTempActionPerformed(evt);
             }
         });
 
@@ -136,13 +149,13 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(DateChooserIni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(DateChooserFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(ComboBoxTemp, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane2))
@@ -167,9 +180,9 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(jLabel3)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DateChooserIni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(DateChooserFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboBoxTemp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -181,19 +194,46 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMesActionPerformed
-        // TODO add your handling code here:
+        DateChooserIni.setEnabled(true);
+        DateChooserFin.setEnabled(true);
+        ComboBoxTemp.setEnabled(false);
+        cargarTablaFiltrado();
     }//GEN-LAST:event_botonMesActionPerformed
 
     private void botonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirActionPerformed
         dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_botonSalirActionPerformed
+    
+     private LocalDate pasarALocalDate(Date fecha){
+    LocalDate fechaLocal = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    return fechaLocal;
+    }
+    
+    private void ComboBoxTempActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxTempActionPerformed
+        if(ComboBoxTemp.getSelectedItem()!= null){
+            String temporada = (String)ComboBoxTemp.getSelectedItem();
+            Map<String, Integer> lista = accesoPaquete.buscarPaquetePorTemporada(temporada);
+            borrarFilaTabla2();
+            for (Map.Entry<String, Integer> dato : lista.entrySet()) {
+                String ciudad = dato.getKey();
+                int cantidad = dato.getValue();
+                tabla2.addRow(new Object[]{ciudad, cantidad});
+            }
+        }
+    }//GEN-LAST:event_ComboBoxTempActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
+    private void cargarComboBoxTemporada() {
+      
+        ComboBoxTemp.addItem("Alta");
+        ComboBoxTemp.addItem("Media");
+        ComboBoxTemp.addItem("Baja");
+    }
+    
     private void botonTemporadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTemporadaActionPerformed
-        // TODO add your handling code here:
+        DateChooserIni.setEnabled(false);
+        DateChooserFin.setEnabled(false); 
+        ComboBoxTemp.setEnabled(true);
+        cargarTablaFiltrado();
     }//GEN-LAST:event_botonTemporadaActionPerformed
 
     private void armarCabeceraPaquetes() {
@@ -225,17 +265,31 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
     private void cargarTabla(){
         LocalDate fechaLimite = LocalDate.now().minusMonths(2);
         ArrayList<Paquete> lista = accesoPaquete.buscarPaqueteDesde(fechaLimite);
-        System.out.println(lista);
-        borrarfilaTabla();
+//        System.out.println(lista);
+        borrarFilaTabla();
         for (Paquete paquete : lista) {
             tabla.addRow(new Object []{
             paquete.getCodPaquete(), paquete.getTurista().getNombre()+" "+paquete.getTurista().getApellido(), paquete.getBoleto().getCiudadDestino().getNombre(),paquete.getTipo(), paquete.getFechaIni(), paquete.getFechaFin()
             });
         }
-
     }
     
-     private void borrarfilaTabla() {
+    private void cargarTablaFiltrado(){
+        
+//        Map<String, Integer> lista = accesoPaquete.buscarPaqueteEntre(title);
+        
+        
+    }
+    
+    private void borrarFilaTabla2(){     
+       int  indice = tabla2.getRowCount() - 1;
+
+        for (int i = indice; i >= 0; i--) {
+            tabla2.removeRow(i);
+        }
+    }
+    
+     private void borrarFilaTabla() {
         
         int indice = tabla.getRowCount() - 1;
 
@@ -244,12 +298,12 @@ public class VistaEstadisticas extends javax.swing.JInternalFrame {
         }
      }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboBoxTemp;
+    private com.toedter.calendar.JDateChooser DateChooserFin;
+    private com.toedter.calendar.JDateChooser DateChooserIni;
     private javax.swing.JRadioButton botonMes;
     private javax.swing.JButton botonSalir;
     private javax.swing.JRadioButton botonTemporada;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -9,7 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -208,4 +214,77 @@ public class PaqueteData {
     }
         return listaDePaquetes;
     }    
+    
+    
+    private LocalDate pasaraALocalDate(Date fecha){
+    LocalDate fechaLocal = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    return fechaLocal;
+    }
+    
+    
+    
+    public Map<String, Integer> buscarPaqueteEntre(LocalDate fechaInicio, LocalDate fechaFin) {
+    String sql = "SELECT ciudad.nombre, COUNT(*) AS cantidad FROM paquete "
+               + "JOIN pasaje ON paquete.boleto = pasaje.codPasaje "
+               + "JOIN ciudad ON ciudad.codCiudad = pasaje.idCiudad_Destino "
+               + "WHERE paquete.fechaCompra > ? AND paquete.fechaCompra < ? "
+               + "GROUP BY ciudad.nombre";
+    
+    Map<String, Integer> ciudadCantidad = new HashMap<>();
+    
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setDate(1,Date.valueOf(fechaInicio) );
+        ps.setDate(2, Date.valueOf(fechaFin) );
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String ciudad = rs.getString("ciudad.nombre");
+                int cantidad = rs.getInt("cantidad");
+                ciudadCantidad.put(ciudad, cantidad);
+            }
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Error al filtrar por fecha");
+    }
+
+    return ciudadCantidad;
 }
+    
+    
+    
+    public Map<String, Integer> buscarPaquetePorTemporada(String temporada) {
+        String sql = "SELECT ciudad.nombre, COUNT(*) AS cantidad "
+                   + "FROM paquete "
+                   + "JOIN pasaje ON paquete.boleto = pasaje.codPasaje "
+                   + "JOIN ciudad ON ciudad.codCiudad = pasaje.idCiudad_Destino "
+                   + "WHERE paquete.temporada = ? "
+                   + "GROUP BY ciudad.nombre;";
+        
+        Map<String, Integer> ciudadCantidad = new HashMap<>();
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, temporada);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String ciudad = rs.getString("ciudad.nombre");
+                    int cantidad = rs.getInt("cantidad");
+                    ciudadCantidad.put(ciudad, cantidad);
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al filtrar por temporada");      
+        }
+
+        return ciudadCantidad;
+    }
+   }
+    
+
+    
+
+        
+        
+    
+
