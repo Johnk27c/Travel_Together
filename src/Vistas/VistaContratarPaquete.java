@@ -504,7 +504,11 @@ public class VistaContratarPaquete extends javax.swing.JInternalFrame {
             } else if((int)spn_cantAdultos.getValue()+(int)spn_cantAdultos.getValue()>cantidadDisponibleAlojamiento){
                 JOptionPane.showMessageDialog(rootPane, "No hay disponibilidad para tantas personas (Máximo: "+cantidadDisponibleAlojamiento+")");
             } else{
-                
+                VistaCargaPersonas cargaPersonas = new VistaCargaPersonas(paqueteActual);
+                    cargaPersonas.setVisible(true);
+                    jDesktopPanel.add(cargaPersonas);
+                    cargaPersonas.show();
+                    this.toBack();
             }
         }
     }//GEN-LAST:event_btn_contratarActionPerformed

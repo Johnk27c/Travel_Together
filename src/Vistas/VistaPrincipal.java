@@ -34,10 +34,8 @@ public class VistaPrincipal extends javax.swing.JFrame {
         jMenu_paquetes = new javax.swing.JMenu();
         jMenuItem_consultasClientes = new javax.swing.JMenuItem();
         jMenuItem_contratarPaquete = new javax.swing.JMenuItem();
-        jM_cargaPersonas = new javax.swing.JMenuItem();
         jMenu_ventas = new javax.swing.JMenu();
         jMenuItem_estadisticas = new javax.swing.JMenuItem();
-        jMenuItem_personalizado = new javax.swing.JMenuItem();
         jMenu_Salir = new javax.swing.JMenu();
 
         jMenu3.setText("File");
@@ -79,14 +77,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
         });
         jMenu_paquetes.add(jMenuItem_contratarPaquete);
 
-        jM_cargaPersonas.setText("jMenuItem2");
-        jM_cargaPersonas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jM_cargaPersonasActionPerformed(evt);
-            }
-        });
-        jMenu_paquetes.add(jM_cargaPersonas);
-
         jMenuBar1.add(jMenu_paquetes);
 
         jMenu_ventas.setText("Ventas");
@@ -98,14 +88,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
             }
         });
         jMenu_ventas.add(jMenuItem_estadisticas);
-
-        jMenuItem_personalizado.setText("Personalizado");
-        jMenuItem_personalizado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem_personalizadoActionPerformed(evt);
-            }
-        });
-        jMenu_ventas.add(jMenuItem_personalizado);
 
         jMenuBar1.add(jMenu_ventas);
 
@@ -165,22 +147,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenu_SalirMouseClicked
 
-    private void jM_cargaPersonasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jM_cargaPersonasActionPerformed
-        jDesktopPanel.removeAll();
-        jDesktopPanel.repaint();
-        VistaCargaPersonas vistaCargaPersonas = new VistaCargaPersonas();
-        vistaCargaPersonas.setVisible(true);
-        jDesktopPanel.add(vistaCargaPersonas);
-    }//GEN-LAST:event_jM_cargaPersonasActionPerformed
-
-    private void jMenuItem_personalizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_personalizadoActionPerformed
-//        jDesktopPanel.removeAll();
-//        jDesktopPanel.repaint();
-//        VistaPersonalizado vistaPersonalizado = new VistaPersonalizado();
-//        vistaPersonalizado.setVisible(true);
-//        jDesktopPanel.add(vistaPersonalizado);
-    }//GEN-LAST:event_jMenuItem_personalizadoActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -231,7 +197,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktopPanel;
-    private javax.swing.JMenuItem jM_cargaPersonas;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
@@ -240,7 +205,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem_consultasClientes;
     private javax.swing.JMenuItem jMenuItem_contratarPaquete;
     private javax.swing.JMenuItem jMenuItem_estadisticas;
-    private javax.swing.JMenuItem jMenuItem_personalizado;
     private javax.swing.JMenu jMenu_Salir;
     private javax.swing.JMenu jMenu_paquetes;
     private javax.swing.JMenu jMenu_ventas;
